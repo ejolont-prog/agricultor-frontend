@@ -1,0 +1,73 @@
+<mat-drawer-container class="drawer-container" autosize>
+  <mat-drawer #drawer class="sidenav" mode="side" opened="true">
+    <div class="logo-section">
+      <mat-icon class="coffee-logo">agriculture</mat-icon>
+      <h2>Agricultor</h2>
+    </div>
+
+    <mat-nav-list>
+      <a mat-list-item href="#">
+        <mat-icon matListItemIcon>home</mat-icon>
+        <span matListItemTitle>Home</span>
+      </a>
+      <a mat-list-item href="#">
+        <mat-icon matListItemIcon>assignment</mat-icon>
+        <span matListItemTitle>Gestiones</span>
+      </a>
+      <a mat-list-item href="#">
+        <mat-icon matListItemIcon>local_shipping</mat-icon>
+        <span matListItemTitle>Logística</span>
+      </a>
+      <a mat-list-item href="#">
+        <mat-icon matListItemIcon>history</mat-icon>
+        <span matListItemTitle>Historial</span>
+      </a>
+      <a mat-list-item href="#">
+        <mat-icon matListItemIcon>settings</mat-icon>
+        <span matListItemTitle>Ajustes</span>
+      </a>
+    </mat-nav-list>
+
+    <div class="logout-wrapper">
+      <button mat-button class="logout-btn">
+        <mat-icon>logout</mat-icon> Log out
+      </button>
+    </div>
+  </mat-drawer>
+
+  <mat-drawer-content class="app-container">
+    <header class="header">
+      <div class="top-row">
+        <button mat-icon-button (click)="drawer.toggle()" class="menu-toggle">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div class="brand-text">
+          <h1>¡Bienvenido, Agricultor!</h1>
+          <p>Realiza tus gestiones de pesaje y transporte.</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="product-layout">
+      <mat-card class="coffee-card" *ngFor="let p of productos">
+        <div class="image-wrapper">
+          <mat-icon class="card-icon">{{p.icon}}</mat-icon>
+        </div>
+
+        <mat-card-content>
+          <div class="info">
+            <h2>{{p.nombre}}</h2>
+          </div>
+
+          <div class="card-footer">
+            <button mat-fab extended class="go-btn" [routerLink]="p.route">
+              <mat-icon>arrow_forward</mat-icon>
+              Ir
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </main>
+  </mat-drawer-content>
+</mat-drawer-container>
+

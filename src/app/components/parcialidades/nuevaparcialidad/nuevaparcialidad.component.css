@@ -1,0 +1,137 @@
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+:host {
+  /* Paleta de colores */
+  --coffee-dark: #2b170e;
+  --accent-gold: #c6a47e;
+  --melon-bg: #fde6d8;
+  --melon-text: #e59a7d;
+  --neon-glow: #ff9f69;
+
+  display: block;
+  min-height: 100vh;
+  background-color: var(--melon-bg); /* Fondo melón para toda la vista */
+}
+
+.page-container {
+  padding: 40px 20px;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.section-header {
+  margin-bottom: 35px;
+}
+
+.back-btn {
+  color: var(--coffee-dark) !important;
+  font-weight: 600 !important;
+  margin-bottom: 10px !important;
+}
+
+.title-group h1 {
+  color: var(--coffee-dark);
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.title-group p {
+  color: #7a6a62;
+  font-size: 1.1rem;
+}
+
+/* TARJETA DEL FORMULARIO */
+.form-card {
+  background-color: white !important;
+  border-radius: 40px !important; /* Más redondeada */
+  padding: 45px !important;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.08) !important;
+  border: 1px solid rgba(0,0,0,0.03) !important;
+}
+
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+}
+
+/* --- MEJORA DE INPUTS (MÁS ALTOS Y REDONDEADOS) --- */
+
+/* Contenedor principal del input */
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: rgba(253, 230, 216, 0.25) !important; /* Fondo melón suave */
+  border-radius: 25px !important; /* Bordes muy redondeados */
+  min-height: 70px !important; /* Más alto */
+  display: flex;
+  align-items: center;
+  padding: 0 20px !important;
+}
+
+/* Ajuste de los bordes laterales (Outline) */
+::ng-deep .mdc-notched-outline__leading {
+  border-radius: 25px 0 0 25px !important;
+  width: 25px !important;
+}
+
+::ng-deep .mdc-notched-outline__trailing {
+  border-radius: 0 25px 25px 0 !important;
+}
+
+/* Color de borde por defecto */
+::ng-deep .mdc-notched-outline > * {
+  border-color: rgba(229, 154, 125, 0.3) !important;
+}
+
+/* Estilo cuando el input está enfocado */
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--melon-text) !important;
+  border-width: 2px !important;
+}
+
+/* Ajuste de iconos y etiquetas */
+::ng-deep .mat-mdc-form-field-icon-suffix mat-icon {
+  color: var(--melon-text) !important;
+  margin-top: 4px;
+}
+
+::ng-deep .mat-mdc-form-field-label-wrapper {
+  top: -8px !important;
+  padding-top: 24px !important;
+}
+
+/* --- BOTÓN CREAR (MEJORADO) --- */
+.form-actions {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.create-btn {
+  background-color: var(--coffee-dark) !important;
+  color: white !important;
+  border-radius: 25px !important;
+  padding: 0 60px !important;
+  height: 65px !important; /* Altura proporcional a los inputs */
+  font-size: 1.1rem !important;
+  font-weight: bold !important;
+  border: 2px solid var(--neon-glow) !important;
+  box-shadow: 0 0 15px var(--neon-glow);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.create-btn:hover {
+  box-shadow: 0 0 30px var(--neon-glow), 0 0 50px var(--neon-glow);
+  transform: translateY(-5px) scale(1.02);
+  background-color: var(--accent-gold) !important;
+  color: var(--coffee-dark) !important;
+}

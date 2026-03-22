@@ -1,0 +1,207 @@
+:host {
+  /* Paleta de colores */
+  --coffee-dark: #2b170e;
+  --accent-gold: #c6a47e;
+  --melon-bg: #fde6d8;
+  --melon-text: #e59a7d;
+  --neon-glow: #ff9f69;
+
+  display: block;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* CONTENEDOR */
+.drawer-container {
+  height: 100vh;
+  background-color: var(--melon-bg);
+}
+
+/* SIDENAV */
+.sidenav {
+  width: 280px; /* Un poco más ancha para dar aire */
+  background-color: white !important;
+  border-right: 1px solid rgba(0,0,0,0.05) !important;
+  padding: 24px 16px; /* Más espacio arriba y a los lados */
+  display: flex;
+  flex-direction: column;
+}
+
+/* LOGO */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 0 50px 15px; /* Más espacio inferior antes de que empiece la lista */
+  color: var(--coffee-dark);
+}
+.coffee-logo {
+  color: var(--accent-gold);
+  font-size: 28px;
+}
+
+/* NAVBAR */
+mat-nav-list a {
+  border-radius: 12px !important;
+  margin-bottom: 12px;
+  padding: 12px 16px !important;
+  height: 48px !important; /* Forzamos una altura fija */
+  display: flex;
+  align-items: center;
+  transition: background 0.3s ease; /* Solo animamos el color de fondo */
+  border: 1px solid transparent; /* Evita saltos si luego decides poner bordes */
+}
+
+mat-nav-list a .mdc-list-item__primary-text,
+mat-nav-list a mat-icon {
+  margin-right: 16px !important; /* Crea el espacio necesario entre icono y letra */
+  color: var(--melon-text) !important;
+}
+
+mat-nav-list a:hover{
+  background: rgba(255,159,105,.15) !important;
+  box-shadow: 0 4px 15px rgba(255,159,105,.25);
+  transform: none !important;
+}
+
+mat-nav-list a:hover .mdc-list-item__primary-text,
+mat-nav-list a:hover mat-icon{
+  color: var(--coffee-dark) !important;
+}
+
+mat-nav-list a:hover mat-icon{
+  transform: none !important;
+}
+
+/* LOGOUT */
+.logout-wrapper{
+  margin-top:auto;
+  padding-bottom:20px;
+}
+
+.logout-btn{
+  color:#ff8a80 !important;
+  width:100%;
+  text-align:left;
+}
+
+/* CONTENIDO */
+.app-container{
+  background-color:var(--melon-bg) !important;
+  padding:40px 5%;
+}
+
+/* HEADER */
+.brand-text h1{
+  font-size:2.2rem;
+  margin:0;
+  color:var(--coffee-dark);
+  font-weight:800;
+}
+
+.brand-text p{
+  color:#7a6a62;
+  font-size:1.1rem;
+}
+
+/* GRID */
+.product-layout{
+  display:flex;
+  flex-wrap:wrap;
+  gap:80px 30px;
+  margin-top:70px;
+  justify-content:center;
+}
+
+/* TARJETAS */
+.coffee-card{
+  background-color:var(--coffee-dark) !important;
+  color:white !important;
+  border-radius:35px !important;
+  padding:20px;
+  width:240px;
+  min-height:200px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  position:relative;
+
+  border:2px solid var(--neon-glow);
+  box-shadow:0 0 10px var(--neon-glow);
+
+  transition:all .3s ease;
+}
+
+/* HOVER TARJETA */
+.coffee-card:hover{
+  transform:translateY(-10px);
+  box-shadow:
+    0 0 10px var(--neon-glow),
+    0 0 25px var(--neon-glow),
+    0 0 40px var(--neon-glow);
+}
+
+/* ICONO CIRCULAR */
+.image-wrapper{
+  width:110px;
+  height:110px;
+  margin:-85px auto 15px;
+  background:white;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 12px 25px rgba(0,0,0,.4);
+}
+
+.card-icon{
+  font-size:55px;
+  width:55px;
+  height:55px;
+  color:var(--coffee-dark);
+}
+
+/* TITULO */
+.info h2{
+  font-size:1.2rem;
+  margin:10px 0;
+  font-weight:600;
+  text-align:center;
+}
+
+/* FOOTER */
+.card-footer{
+  display:flex;
+  justify-content:center;
+  margin-top:15px;
+}
+
+/* BOTON IR NEON */
+.go-btn{
+  background-color:var(--accent-gold) !important;
+  color:var(--coffee-dark) !important;
+  border-radius:16px !important;
+  font-weight:bold !important;
+  padding:0 25px !important;
+
+  border:2px solid var(--neon-glow);
+  box-shadow:0 0 8px var(--neon-glow);
+
+  transition:all .3s ease;
+}
+
+/* HOVER BOTON */
+.go-btn:hover{
+  box-shadow:
+    0 0 10px var(--neon-glow),
+    0 0 20px var(--neon-glow),
+    0 0 35px var(--neon-glow);
+  transform:scale(1.05);
+}
+
+/* RESPONSIVE */
+@media (min-width:1024px){
+  .product-layout{
+    justify-content:flex-start;
+  }
+}

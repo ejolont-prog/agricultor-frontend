@@ -1,0 +1,61 @@
+<div class="page-container">
+  <header class="section-header">
+    <button mat-button class="back-btn" routerLink="/parcialidades">
+      <mat-icon>arrow_back</mat-icon> Volver a Listado
+    </button>
+    <div class="title-group">
+      <h1>Nueva Parcialidad</h1>
+      <p>Registra el peso y asigna la logística del lote.</p>
+    </div>
+  </header>
+
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form class="registro-form">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Peso Total</mat-label>
+          <input matInput type="number" placeholder="0.00">
+          <mat-icon matSuffix>scale</mat-icon>
+        </mat-form-field>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Transporte Disponible</mat-label>
+            <mat-select>
+              <mat-option value="t1">Unidad Pesada C-102</mat-option>
+              <mat-option value="t2">Remolque R-40</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>local_shipping</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Transportista</mat-label>
+            <mat-select>
+              <mat-option value="p1">Juan Manuel Arriola</mat-option>
+              <mat-option value="p2">Ricardo Sosa</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>badge</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Unidad de Medida</mat-label>
+            <mat-select>
+              <mat-option value="kg">Kilogramos (kg)</mat-option>
+              <mat-option value="lb">Libras (lb)</mat-option>
+              <mat-option value="tn">Toneladas (tn)</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>straighten</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-fab extended class="create-btn" type="button" (click)="crearParcialidad()">
+            <mat-icon>check_circle</mat-icon>
+            CREAR PARCIALIDAD
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
