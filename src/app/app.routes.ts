@@ -6,10 +6,38 @@ import { TransporteComponent } from './components/transporte/transporte.componen
 import { TransportistaComponent } from './components/transportista/transportista.component';
 import { NuevaparcialidadComponent } from './components/parcialidades/nuevaparcialidad/nuevaparcialidad.component';
 
+// 1. Importa el guard (asegúrate de que la ruta del archivo sea correcta)
+import { authGuard } from './auth/auth.guard';
+
 export const routes: Routes = [
-  { path: '', component: DashboardComponent }, // Esta es tu pantalla principal
-  { path: 'parcialidades', component: ParcialidadesComponent },
-  { path: 'parcialidades/nueva', component: NuevaparcialidadComponent },  { path: 'pesajes', component: PesajesComponent },
-  { path: 'transporte', component: TransporteComponent },
-  { path: 'transportista', component: TransportistaComponent },
+  {
+    path: '',
+    component: DashboardComponent,
+    canActivate: [authGuard] // Protege el dashboard
+  },
+  {
+    path: 'parcialidades',
+    component: ParcialidadesComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'parcialidades/nueva',
+    component: NuevaparcialidadComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'pesajes',
+    component: PesajesComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'transporte',
+    component: TransporteComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'transportista',
+    component: TransportistaComponent,
+    canActivate: [authGuard]
+  },
 ];
