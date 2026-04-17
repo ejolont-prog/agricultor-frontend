@@ -8,8 +8,9 @@
       <button mat-button class="back-btn" routerLink="/">
         <mat-icon>arrow_back</mat-icon> Regresar
       </button>
-      <button class="btn add-btn" routerLink="crear-pesaje">
-        Nuevo Pesaje
+
+      <button mat-fab extended class="add-btn" routerLink="/pesajes/nueva">
+        <mat-icon>add</mat-icon> Nuevo Pesaje
       </button>
     </div>
   </header>
@@ -31,10 +32,17 @@
         <tbody>
         <tr *ngFor="let p of listado">
           <td class="fw-bold">{{ p.idpesaje }}</td>
-          <td class="fw-bold">{{ p.nocuenta }}</td>
+          <td class="fw-bold">
+  <span *ngIf="p.nocuenta; else sinCuenta">
+    {{ p.nocuenta }}
+  </span>
+            <ng-template #sinCuenta>
+              <span class="text-muted fst-italic">Pendiente de confirmar</span>
+            </ng-template>
+          </td>
           <td>{{ p.pesototalestimado }}</td>
           <td>{{ p.cantidadparcialidades }}</td>
-          <td>{{ p.fechacreacion }}</td>
+          <td>{{ p.fechacreacion | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>
               <span [ngClass]="p.estado === 1 ? 'status-active' : 'status-inactive'">
                 {{ p.estado === 1 ? 'Activo' : 'Inactivo' }}

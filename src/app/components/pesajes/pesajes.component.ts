@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common'; // Imprescindible para directiva
 import { PesajeService } from '../../services/pesaje.service';
 import { Pesaje } from '../../models/pesaje.model';
 import { RouterModule } from '@angular/router';
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatFabButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-pesajes',
   standalone: true,
   // Agregamos CommonModule y RouterModule aquí
-  imports: [CommonModule, RouterModule, MatButton, MatIcon],
+  imports: [CommonModule, RouterModule, MatButton, MatIcon, MatFabButton],
   templateUrl: './pesajes.component.html',
   styleUrl: './pesajes.component.css'
 })

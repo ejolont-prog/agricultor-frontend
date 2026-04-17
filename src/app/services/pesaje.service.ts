@@ -16,4 +16,8 @@ export class PesajeService {
   obtenerMisPesajes(): Observable<Pesaje[]> {
     return this.http.get<Pesaje[]>(this.URL);
   }
+
+  guardar(pesaje: any): Observable<any> {
+    return this.http.post<any>(`${API_BASE_URL}/pesajes/guardar`, pesaje);
+  }
 }

@@ -9,4 +9,5 @@ export interface Pesaje {
   idperfilagricultor?: number;
   creadopor?: number;
   fechacreacion?: Date;
+  eliminado?: boolean;
 }
