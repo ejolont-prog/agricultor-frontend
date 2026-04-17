@@ -43,11 +43,7 @@
           <td>{{ p.pesototalestimado }}</td>
           <td>{{ p.cantidadparcialidades }}</td>
           <td>{{ p.fechacreacion | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>
-              <span [ngClass]="p.estado === 1 ? 'status-active' : 'status-inactive'">
-                {{ p.estado === 1 ? 'Activo' : 'Inactivo' }}
-              </span>
-          </td>
+          <td>{{ p.nombreEstado }}</td>
           <td>
             <button class="btn detail-btn">Ver Detalle</button>
           </td>

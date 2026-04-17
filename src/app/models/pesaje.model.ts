@@ -10,4 +10,5 @@ export interface Pesaje {
   creadopor?: number;
   fechacreacion?: Date;
   eliminado?: boolean;
+  nombreEstado?: string;
 }
