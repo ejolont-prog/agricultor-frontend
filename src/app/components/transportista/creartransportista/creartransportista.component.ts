@@ -67,28 +67,35 @@ export class CrearTransportistaComponent implements OnInit {
     });
   }
 
-  crearTransportista(): void {
-      if (this.transportistaForm.invalid) return;
-
-      const formValue = this.transportistaForm.value;
-
-      const payload = {
-        cui: formValue.cui,
-        nombreCompleto: formValue.nombreCompleto,
-        fechaNacimiento: formValue.fechaNacimiento,
-        tipoLicencia: formValue.tipoLicencia, // OJO: luego ajustamos esto
-        fechaVencimientoLicencia: formValue.fechaVencimientoLicencia
-      };
-
-      this.transportistaService.crearTransportista(payload).subscribe({
-        next: (res) => {
-          console.log('Transportista creado:', res);
-        },
-        error: (err) => {
-          console.error('Error al crear transportista:', err);
-        }
-      });
+  crearTransportista() {
+    if (this.transportistaForm.invalid) {
+      this.transportistaForm.markAllAsTouched();
+      return; // Este return es para detener la función si el formulario es inválido
     }
+
+    const datosTransportista = this.transportistaForm.value;
+
+    this.transportistaService.crearTransportista(datosTransportista).subscribe({
+      next: (res) => {
+        console.log('¡Transportista guardado!', res);
+        alert('Transportista creado exitosamente');
+        // Si quieres limpiar el formulario después de guardar:
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        // Capturamos el mensaje de nuestras excepciones (CUI, Edad, Licencia)
+        let mensajeError = 'Ocurrió un error al procesar la solicitud';
+
+        if (typeof err.error === 'string') {
+          mensajeError = err.error;
+        } else if (err.error && err.error.message) {
+          mensajeError = err.error.message;
+        }
+
+        alert(mensajeError);
+      }
+    });
+  }
 
   cancelar(): void {
     this.router.navigate(['/transportista']);

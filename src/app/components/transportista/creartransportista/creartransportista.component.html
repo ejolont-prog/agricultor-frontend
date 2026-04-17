@@ -39,11 +39,10 @@
           <mat-form-field appearance="outline">
             <mat-label>Tipo de Licencia</mat-label>
             <mat-select formControlName="tipoLicencia">
-              <mat-option *ngFor="let licencia of tiposLicencia" [value]="licencia.nombre">
+              <mat-option *ngFor="let licencia of tiposLicencia" [value]="licencia.id">
                 {{licencia.nombre}}
               </mat-option>
             </mat-select>
-            <mat-icon matSuffix>badge</mat-icon>
           </mat-form-field>
 
           <mat-form-field appearance="outline">

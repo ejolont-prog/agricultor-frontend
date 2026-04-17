@@ -48,15 +48,15 @@ export class TransportistaComponent implements OnInit { // Agregamos el implemen
   cargarTransportistas(): void {
     this.transportistaService.listarTransportistas().subscribe({
       next: (data) => {
-        // Mapeamos los datos que vienen del backend a lo que espera tu HTML
         this.dataSource = data.map(t => ({
           cui: t.cui,
-          nombre: t.nombreCompleto, // nombreCompleto viene del Java Entity
+          nombre: t.nombreCompleto,
           tipoLicencia: t.tipoLicencia,
           fechaVencimiento: t.fechaVencimientoLicencia,
-          estado: t.estado === 1 ? 'Activo' : 'Inactivo', // Ajusta según tus IDs de catálogo
-          disponible: t.disponible,
-          pesaje: 'No' // Dato estático por ahora como tenías en tu ejemplo
+          // Ahora 'nombreEstado' trae el valor real (Ej: "Activo", "Pendiente") desde la tabla catalogos
+          estado: t.nombreEstado,
+          disponible: t.disponible ? 'Sí' : 'No',
+          pesaje: 'No'
         }));
       },
       error: (err) => {
