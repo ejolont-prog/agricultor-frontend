@@ -1,0 +1,94 @@
+:host {
+  --coffee-dark: #2b170e;
+  --accent-gold: #c6a47e;
+  --melon-bg: #fde6d8;
+  --melon-text: #e59a7d;
+  --neon-glow: #ff9f69;
+  display: block;
+  background-color: #fafafa; /* Un fondo sutil para que resalte la tarjeta */
+  min-height: 100vh;
+}
+
+.page-container { padding: 30px; }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.title-group h1 { color: var(--coffee-dark); font-weight: 800; margin: 0; }
+.title-group p { color: var(--melon-text); margin: 0; }
+
+/* BOTONES */
+.btn { border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+
+.add-btn {
+  background-color: var(--accent-gold);
+  color: var(--coffee-dark);
+  border: 2px solid var(--neon-glow);
+  box-shadow: 0 0 8px var(--neon-glow);
+}
+
+.back-btn { background: transparent; color: var(--coffee-dark); }
+
+/* TARJETA Y TABLA */
+.table-card {
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* ESTILO DE CELDAS (Aquí estaba el fallo) */
+.custom-table th {
+  background-color: #fdf5f0; /* Color melón muy suave */
+  color: var(--melon-text);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  padding: 20px;
+  text-align: left;
+}
+
+.custom-table td {
+  padding: 20px;
+  color: var(--coffee-dark);
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.custom-table tr:hover {
+  background-color: rgba(253, 230, 216, 0.2);
+}
+
+/* ESTADOS */
+.status-active {
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.status-inactive {
+  color: #c62828;
+  background: #ffebee;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.detail-btn {
+  background-color: var(--coffee-dark);
+  color: white;
+  font-size: 0.75rem;
+}
