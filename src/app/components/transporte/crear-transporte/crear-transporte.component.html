@@ -1,1 +1,81 @@
-<p>crear-transporte works!</p>
+<div class="page-container">
+  <div class="section-header">
+    <button mat-button class="back-btn" (click)="cancelar()">
+      <mat-icon>arrow_back</mat-icon> REGRESAR
+    </button>
+    <div class="title-group">
+
+      <h1>Nuevo Transporte</h1>
+      <p>Complete la información del vehículo</p>
+    </div>
+  </div>
+
+  <mat-card class="form-card">
+    <form [formGroup]="transporteForm" (ngSubmit)="guardar()">
+      <div class="form-grid">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tipo de Placa</mat-label>
+          <mat-select formControlName="idTipoPlaca">
+            <mat-option *ngFor="let placa of tiposPlacas" [value]="placa.id">
+              {{ placa.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Placa</mat-label>
+          <input matInput formControlName="placa" placeholder="Ej: P123ABC" uppercase>
+          <mat-error *ngIf="transporteForm.get('placa')?.hasError('pattern')">
+            El formato debe ser tipo placa (Ej: P123ABC)
+          </mat-error>
+          <mat-error *ngIf="transporteForm.get('placa')?.hasError('required')">
+            La placa es obligatoria
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Marca</mat-label>
+          <mat-select formControlName="idMarca" (selectionChange)="onMarcaChange($event.value)">
+            <mat-option *ngFor="let m of marcas" [value]="m.id">{{m.nombre}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Línea</mat-label>
+          <mat-select formControlName="idLinea">
+            <mat-option *ngFor="let l of lineas" [value]="l.id">
+              {{ l.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Modelo (Año)</mat-label>
+          <mat-select formControlName="idModelo">
+            <mat-option *ngFor="let anio of aniosModelo" [value]="anio">
+              {{ anio }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Color</mat-label>
+          <mat-select formControlName="idColor">
+            <mat-option *ngFor="let c of colores" [value]="c.id">{{c.nombre}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+
+      <div class="form-actions">
+        <button mat-button type="button" class="cancel-btn" (click)="cancelar()">
+          CANCELAR
+        </button>
+        <button mat-raised-button type="submit" class="create-btn" [disabled]="transporteForm.invalid">
+          <mat-icon>save</mat-icon> CREAR TRANSPORTE
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

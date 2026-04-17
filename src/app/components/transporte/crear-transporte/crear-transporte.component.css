@@ -1,0 +1,115 @@
+:host {
+  /* Paleta de colores */
+  --coffee-dark: #2b170e;
+  --accent-gold: #c6a47e;
+  --melon-bg: #fde6d8;
+  --melon-text: #e59a7d;
+  --neon-glow: #ff9f69;
+
+  display: block;
+  min-height: 100vh;
+  background-color: var(--melon-bg);
+}
+
+.page-container {
+  padding: 40px 20px;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.section-header {
+  margin-bottom: 35px;
+}
+
+.back-btn {
+  color: var(--coffee-dark) !important;
+  font-weight: 600 !important;
+  margin-bottom: 10px !important;
+}
+
+.title-group h1 {
+  color: var(--coffee-dark);
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.title-group p {
+  color: #7a6a62;
+  font-size: 1.1rem;
+}
+
+.form-card {
+  background-color: white !important;
+  border-radius: 40px !important;
+  padding: 45px !important;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.08) !important;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* --- ESTILOS DE INPUTS DE MATERIAL (Cápsulas redondeadas) --- */
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: rgba(253, 230, 216, 0.25) !important;
+  border-radius: 25px !important;
+  min-height: 70px !important;
+  padding: 0 20px !important;
+}
+
+::ng-deep .mdc-notched-outline__leading { border-radius: 25px 0 0 25px !important; border: none !important; }
+::ng-deep .mdc-notched-outline__trailing { border-radius: 0 25px 25px 0 !important; border: none !important; }
+::ng-deep .mdc-notched-outline__notch { border: none !important; }
+
+/* --- BOTONES --- */
+.form-actions {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.cancel-btn {
+  color: #7a6a62 !important;
+  font-weight: bold !important;
+}
+
+.create-btn {
+  background-color: var(--coffee-dark) !important;
+  color: white !important;
+  border-radius: 25px !important;
+  padding: 0 60px !important;
+  height: 65px !important;
+  font-size: 1.1rem !important;
+  font-weight: bold !important;
+  border: 2px solid var(--neon-glow) !important;
+  box-shadow: 0 0 15px var(--neon-glow);
+  transition: all 0.4s ease;
+}
+
+.create-btn:hover:not(:disabled) {
+  box-shadow: 0 0 30px var(--neon-glow);
+  transform: translateY(-5px);
+  background-color: var(--accent-gold) !important;
+}
+
+/* Estilo cuando el botón está bloqueado */
+.create-btn:disabled {
+  background-color: #ccc !important;
+  border-color: #999 !important;
+  box-shadow: none !important;
+  opacity: 0.6;
+}
+
+.back-btn {
+  color: var(--coffee-dark) !important;
+  font-weight: 600 !important;
+  margin-bottom: 10px !important;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
