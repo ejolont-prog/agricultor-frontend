@@ -45,9 +45,12 @@ export class AuthService {
   }
 
   logout(): void {
+    // 1. Limpia el token local del sistema de pesajes (Puerto 4500)
     localStorage.removeItem(this.TOKEN_KEY);
-    // Cambia esta URL por la constante FRONTEND_LOGIN_URL si la tienes importada
-    window.location.href =  FRONTEND_LOGIN_URL;
+
+    // 2. Redirige al login enviando el parámetro de cierre forzado
+    // Esto le avisa a la otra app que también debe borrar su token
+    window.location.href = `${FRONTEND_LOGIN_URL}?logout=true`;
   }
 
   /**

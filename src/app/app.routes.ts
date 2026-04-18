@@ -10,6 +10,7 @@ import { CrearTransporteComponent } from './components/transporte/crear-transpor
 
 // 1. Importa el guard (asegúrate de que la ruta del archivo sea correcta)
 import { authGuard } from './auth/auth.guard';
+import {CrearPesajeComponent} from "./components/pesajes/crear-pesaje/crear-pesaje.component";
 
 export const routes: Routes = [
   {
@@ -33,6 +34,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'pesajes/nueva',
+    component: CrearPesajeComponent,
+    canActivate: [authGuard]
+  },
+  {
     path: 'transporte',
     component: TransporteComponent,
     canActivate: [authGuard]
@@ -50,4 +56,8 @@ export const routes: Routes = [
   { path: 'transporte/crear',
     component: CrearTransporteComponent,
     canActivate: [authGuard] },
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
+  }
 ];

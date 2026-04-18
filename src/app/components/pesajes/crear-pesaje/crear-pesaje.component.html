@@ -1,1 +1,63 @@
-<p>crear-pesaje works!</p>
+<div class="page-container">
+  <div class="form-card">
+    <header class="form-header">
+      <h2 class="title-custom">Registrar Nuevo Pesaje</h2>
+      <p class="subtitle">Complete los datos para generar un nuevo registro de pesaje</p>
+    </header>
+
+    <form (ngSubmit)="crearPesaje()" class="custom-form">
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label class="text-brown">Medida de Peso</label>
+          <select
+            class="custom-input"
+            [(ngModel)]="unidadSeleccionada"
+            name="unidadMedida"> <option [value]="null" disabled>Seleccione medida...</option>
+            <option *ngFor="let u of unidadesMedida" [value]="u.id">
+              {{ u.nombre }} ({{ u.abreviatura }})
+            </option>
+          </select>
+        </div>
+
+
+
+        <div class="form-group">
+          <label class="text-brown">Peso Total Actual</label>
+          <input
+            type="number"
+            class="custom-input"
+            [(ngModel)]="pesoIngresado"
+            name="pesoTotal"
+            placeholder="0.00">
+        </div>
+
+        <div class="form-group">
+          <label class="text-brown">Estado Inicial</label>
+          <select
+            class="custom-input"
+            [(ngModel)]="estadoSeleccionado"
+            name="estadoPesaje"
+            [disabled]="true"> <option *ngFor="let e of estadosPesaje" [value]="e.id">
+            {{ e.nombre }}
+          </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="text-brown">Fecha de Creación</label>
+          <input type="date" class="custom-input readonly-input" [value]="fechaActual" readonly>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn back-btn" (click)="cancelar()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn add-btn">
+          Crear Pesaje
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

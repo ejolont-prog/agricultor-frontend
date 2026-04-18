@@ -1,1 +1,69 @@
-<p>pesajes works!</p>
+<div class="page-container">
+  <header class="section-header">
+    <div class="title-group">
+      <h1>Gestión de Pesajes</h1>
+      <p>Listado detallado de registros actuales</p>
+    </div>
+    <div class="action-buttons">
+      <button mat-button class="back-btn" routerLink="/">
+        <mat-icon>arrow_back</mat-icon> Regresar
+      </button>
+
+      <button mat-fab extended class="add-btn" routerLink="/pesajes/nueva">
+        <mat-icon>add</mat-icon> Nuevo Pesaje
+      </button>
+    </div>
+  </header>
+
+  <div class="table-card">
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+        <tr>
+          <th>Id Pesaje</th>
+          <th>No. Cuenta</th>
+          <th>Peso Total</th>
+          <th>Cant. Parcialidades</th>
+          <th>Fecha Envío</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let p of listado">
+          <td class="fw-bold">{{ p.idpesaje }}</td>
+          <td class="fw-bold">
+  <span *ngIf="p.nocuenta; else sinCuenta">
+    {{ p.nocuenta }}
+  </span>
+            <ng-template #sinCuenta>
+              <span class="text-muted fst-italic">Pendiente de confirmar</span>
+            </ng-template>
+          </td>
+          <td>{{ p.pesototalestimado }}</td>
+          <td>{{ p.cantidadparcialidades }}</td>
+          <td>{{ p.fechacreacion | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ p.nombreEstado }}</td>
+          <td>
+            <button class="btn detail-btn">Ver Detalle</button>
+          </td>
+        </tr>
+
+        <tr *ngIf="listado.length === 0">
+          <td colspan="7" class="empty-row-cell">
+            <div class="empty-state-wrapper">
+              <div class="icon-container">
+                <mat-icon>inventory_2</mat-icon>
+              </div>
+              <h3 class="empty-title">¡Aún no hay pesajes creados!</h3>
+              <p class="empty-subtitle">
+                Tus registros aparecerán en esta tabla una vez que los generes.
+              </p>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

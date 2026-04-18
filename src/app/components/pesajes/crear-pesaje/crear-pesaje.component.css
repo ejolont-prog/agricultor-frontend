@@ -1,0 +1,110 @@
+.page-container {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.form-card {
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 800px;
+  padding: 40px;
+}
+
+.form-header {
+  margin-bottom: 30px;
+  border-bottom: 2px solid #fde6d8;
+  padding-bottom: 15px;
+}
+
+.title-custom {
+  color: #2b170e;
+  font-weight: 800;
+  margin: 0;
+}
+
+.subtitle {
+  color: #e59a7d;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+/* Cuadrícula de 2 columnas */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.text-brown {
+  color: #2b170e;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.custom-input {
+  border: 2px solid #fde6d8;
+  border-radius: 12px;
+  padding: 12px 15px;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: #ff9f69;
+  box-shadow: 0 0 8px rgba(255, 159, 105, 0.2);
+}
+
+.readonly-input {
+  background-color: #f9f9f9;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* Botones alineados a la derecha */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.btn {
+  padding: 12px 30px;
+  border-radius: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+}
+
+.back-btn {
+  background: white;
+  border: 2px solid #2b170e;
+  color: #2b170e;
+}
+
+.back-btn:hover {
+  background: #f5f5f5;
+}
+
+.add-btn {
+  background: #c6a47e;
+  color: #2b170e;
+  border: 2px solid #ff9f69;
+  box-shadow: 0 4px 10px rgba(198, 164, 126, 0.3);
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 159, 105, 0.4);
+}
