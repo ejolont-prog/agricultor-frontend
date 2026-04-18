@@ -45,7 +45,12 @@
           <td>{{ p.fechacreacion | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ p.nombreEstado }}</td>
           <td>
-            <button class="btn detail-btn">Ver Detalle</button>
+            <button
+              class="btn detail-btn"
+              [routerLink]="['/parcialidades']"
+              [queryParams]="{ idPesaje: p.idpesaje }">
+              Ver Detalle
+            </button>
           </td>
         </tr>
 

@@ -7,16 +7,14 @@ import { TransportistaComponent } from './components/transportista/transportista
 import { NuevaparcialidadComponent } from './components/parcialidades/nuevaparcialidad/nuevaparcialidad.component';
 import { CrearTransportistaComponent } from './components/transportista/creartransportista/creartransportista.component';
 import { CrearTransporteComponent } from './components/transporte/crear-transporte/crear-transporte.component';
-
-// 1. Importa el guard (asegúrate de que la ruta del archivo sea correcta)
 import { authGuard } from './auth/auth.guard';
-import {CrearPesajeComponent} from "./components/pesajes/crear-pesaje/crear-pesaje.component";
+import { CrearPesajeComponent } from "./components/pesajes/crear-pesaje/crear-pesaje.component";
 
 export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    canActivate: [authGuard] // Protege el dashboard
+    canActivate: [authGuard]
   },
   {
     path: 'parcialidades',
@@ -53,11 +51,14 @@ export const routes: Routes = [
     component: CrearTransportistaComponent,
     canActivate: [authGuard]
   },
-  { path: 'transporte/crear',
+  {
+    path: 'transporte/crear',
     component: CrearTransporteComponent,
-    canActivate: [authGuard] },
+    canActivate: [authGuard]
+  }, // <--- Aquí cerramos correctamente la ruta anterior con una coma
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full'
-  }
+  } // <--- Y esta ruta debe ir dentro de sus propias llaves { }
 ];

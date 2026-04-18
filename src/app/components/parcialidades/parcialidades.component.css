@@ -5,13 +5,12 @@
   --melon-text: #e59a7d;
   --neon-glow: #ff9f69;
   display: block;
+  background-color: #fafafa;
+  min-height: 100vh;
 }
 
-.page-container {
-  padding: 20px;
-}
+.page-container { padding: 30px; }
 
-/* HEADER Y BOTONES */
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -19,92 +18,110 @@
   margin-bottom: 30px;
 }
 
-.title-group h1 {
-  color: var(--coffee-dark);
-  font-weight: 800;
-  margin: 0;
-}
+.title-group h1 { color: var(--coffee-dark); font-weight: 800; margin: 0; }
+.title-group p { color: var(--melon-text); margin: 0; }
 
-.title-group p {
-  color: var(--melon-text);
-  margin: 0;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 15px;
-}
-
-/* BOTÓN REGRESAR */
-.back-btn {
-  color: var(--coffee-dark) !important;
-  font-weight: 600 !important;
-}
-
-/* BOTÓN NUEVA PARCIALIDAD (Estilo Neón) */
+/* BOTONES */
 .add-btn {
   background-color: var(--accent-gold) !important;
   color: var(--coffee-dark) !important;
-  border-radius: 16px !important;
-  font-weight: bold !important;
-  border: 2px solid var(--neon-glow);
-  box-shadow: 0 0 8px var(--neon-glow);
-  transition: all .3s ease;
+  border: 2px solid var(--neon-glow) !important;
+  box-shadow: 0 0 8px var(--neon-glow) !important;
 }
 
-.add-btn:hover {
-  box-shadow: 0 0 15px var(--neon-glow);
-  transform: translateY(-2px);
-}
+.back-btn { color: var(--coffee-dark) !important; font-weight: 600; }
 
-/* TARJETA DE TABLA */
+/* TARJETA */
 .table-card {
-  background-color: white !important;
-  border-radius: 25px !important;
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
-  border: none !important;
 }
 
-.table-responsive {
-  overflow-x: auto;
-}
-
-/* ESTILO DE LA TABLA */
-.custom-table {
+/* RESET DE MAT-TABLE PARA QUE PAREZCA CUSTOM-TABLE */
+.custom-table-material {
   width: 100%;
   background: transparent;
 }
 
-.mat-mdc-header-cell {
+.custom-table-material th.mat-mdc-header-cell {
+  background-color: #fdf5f0 !important;
   color: var(--melon-text) !important;
-  font-weight: bold !important;
   text-transform: uppercase;
-  font-size: 0.85rem;
+  font-size: 0.8rem !important;
+  font-weight: bold !important;
   letter-spacing: 1px;
   padding: 20px !important;
+  border-bottom: none;
 }
 
-.mat-mdc-cell {
-  color: var(--coffee-dark) !important;
+.custom-table-material td.mat-mdc-cell {
   padding: 20px !important;
-  font-size: 0.95rem;
+  color: var(--coffee-dark);
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.mat-mdc-row:hover {
-  background-color: rgba(253, 230, 216, 0.3); /* Color melón suave al pasar el mouse */
+.custom-table-material tr.mat-mdc-row:hover {
+  background-color: rgba(253, 230, 216, 0.2) !important;
 }
 
-/* BOTÓN VER DETALLE */
-.detail-btn {
-  background-color: var(--coffee-dark) !important;
-  color: white !important;
-  border-radius: 10px !important;
-  font-size: 0.8rem !important;
-  padding: 0 15px !important;
+.fw-bold { font-weight: bold; }
+
+/* BOTÓN DE ACCIÓN */
+.btn.detail-btn {
+  border: none;
+  background-color: var(--coffee-dark);
+  color: white;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
 }
 
-.detail-btn:hover {
-  background-color: var(--accent-gold) !important;
-  color: var(--coffee-dark) !important;
+.btn.detail-btn:hover {
+  transform: scale(1.1);
+  background-color: #462a1d;
+}
+
+.detail-btn mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+/* Contenedor para el mensaje cuando la tabla está vacía */
+.empty-row-container {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: white;
+}
+
+.empty-state-wrapper .icon-container {
+  margin-bottom: 15px;
+}
+
+.empty-state-wrapper mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: var(--melon-text);
+  opacity: 0.5;
+}
+
+.empty-title {
+  color: var(--coffee-dark);
+  font-weight: 700;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.empty-subtitle {
+  color: var(--melon-text);
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+/* Asegura que la tabla no tenga bordes extraños si está vacía */
+.custom-table-material {
+  border-bottom: 1px solid #f0f0f0;
 }
