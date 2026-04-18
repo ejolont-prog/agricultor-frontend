@@ -5,6 +5,8 @@ import { PesajesComponent } from './components/pesajes/pesajes.component';
 import { TransporteComponent } from './components/transporte/transporte.component';
 import { TransportistaComponent } from './components/transportista/transportista.component';
 import { NuevaparcialidadComponent } from './components/parcialidades/nuevaparcialidad/nuevaparcialidad.component';
+import { CrearTransportistaComponent } from './components/transportista/creartransportista/creartransportista.component';
+import { CrearTransporteComponent } from './components/transporte/crear-transporte/crear-transporte.component';
 
 // 1. Importa el guard (asegúrate de que la ruta del archivo sea correcta)
 import { authGuard } from './auth/auth.guard';
@@ -47,6 +49,13 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'transportista/creartransportista',
+    component: CrearTransportistaComponent,
+    canActivate: [authGuard]
+  },
+  { path: 'transporte/crear',
+    component: CrearTransporteComponent,
+    canActivate: [authGuard] },
     path: '**',
     redirectTo: '',
     pathMatch: 'full'
