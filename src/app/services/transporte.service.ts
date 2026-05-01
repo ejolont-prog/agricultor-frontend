@@ -40,4 +40,10 @@ export class TransporteService {
       headers: this.getHeaders()
     });
   }
+
+  listarTransporteDisponibles(): Observable<any[]> {
+    const token = localStorage.getItem('session_token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any[]>(`${this.apiUrl}/disponibles`, { headers });
+  }
 }

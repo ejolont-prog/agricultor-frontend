@@ -1,6 +1,6 @@
 <div class="page-container">
   <header class="section-header">
-    <button mat-button class="back-btn" routerLink="/parcialidades">
+    <button mat-button class="back-btn" (click)="regresar()">
       <mat-icon>arrow_back</mat-icon> Volver a Listado
     </button>
     <div class="title-group">
@@ -11,46 +11,65 @@
 
   <mat-card class="form-card">
     <mat-card-content>
-      <form class="registro-form">
+      <form [formGroup]="parcialidadForm" class="registro-form">
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Peso Total</mat-label>
-          <input matInput type="number" placeholder="0.00">
+          <input matInput type="number" formControlName="pesoestimadoparcialidad" placeholder="0.00">
           <mat-icon matSuffix>scale</mat-icon>
+          <mat-error *ngIf="parcialidadForm.get('pesoestimadoparcialidad')?.hasError('min')">
+            El peso debe ser mayor a 0
+          </mat-error>
         </mat-form-field>
 
         <div class="form-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Transporte Disponible</mat-label>
-            <mat-select>
-              <mat-option value="t1">Unidad Pesada C-102</mat-option>
-              <mat-option value="t2">Remolque R-40</mat-option>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Transporte</mat-label>
+            <mat-select formControlName="idtransporte">
+              <mat-option *ngFor="let t of transportes" [value]="t.idtransporte">
+                {{ t.placa }} - {{ t.marca }} {{ t.linea }}
+              </mat-option>
             </mat-select>
             <mat-icon matSuffix>local_shipping</mat-icon>
+
+            <mat-hint *ngIf="transportes.length === 0">No hay unidades disponibles.</mat-hint>
+            <mat-error *ngIf="parcialidadForm.get('idtransporte')?.hasError('required')">
+              Debes seleccionar una unidad de transporte.
+            </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Transportista</mat-label>
-            <mat-select>
-              <mat-option value="p1">Juan Manuel Arriola</mat-option>
-              <mat-option value="p2">Ricardo Sosa</mat-option>
+            <mat-select formControlName="idtransportista">
+              <!-- Iteramos sobre la lista que viene del backend -->
+              <mat-option *ngFor="let t of transportistas" [value]="t.idtransportista">
+                {{ t.nombreCompleto }}
+              </mat-option>
             </mat-select>
             <mat-icon matSuffix>badge</mat-icon>
+
+            <!-- Mensajes de ayuda y error -->
+            <mat-hint *ngIf="transportistas.length === 0">No hay transportistas disponibles con estado activo.</mat-hint>
+            <mat-error *ngIf="parcialidadForm.get('idtransportista')?.hasError('required')">
+              Debes seleccionar un transportista para continuar.
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Unidad de Medida</mat-label>
-            <mat-select>
-              <mat-option value="kg">Kilogramos (kg)</mat-option>
-              <mat-option value="lb">Libras (lb)</mat-option>
-              <mat-option value="tn">Toneladas (tn)</mat-option>
+            <mat-select formControlName="tipomedida">
+              <mat-option *ngFor="let unidad of unidadesMedida" [value]="unidad.nombre">
+                {{ unidad.nombre }} {{ unidad.abreviatura ? '(' + unidad.abreviatura + ')' : '' }}
+              </mat-option>
             </mat-select>
             <mat-icon matSuffix>straighten</mat-icon>
+            <mat-hint *ngIf="unidadesMedida.length === 0">Cargando unidades...</mat-hint>
           </mat-form-field>
+
         </div>
 
         <div class="form-actions">
-          <button mat-fab extended class="create-btn" type="button" (click)="crearParcialidad()">
+          <button mat-fab extended class="create-btn" color="primary" (click)="crearParcialidad()">
             <mat-icon>check_circle</mat-icon>
             CREAR PARCIALIDAD
           </button>

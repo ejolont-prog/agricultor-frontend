@@ -34,4 +34,11 @@ export class TransportistaService {
 
     return this.http.post(this.apiUrl, data, { headers });
   }
+
+  listarTransportistasDisponibles(): Observable<any[]> {
+    const token = localStorage.getItem('session_token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any[]>(`${this.apiUrl}/disponibles`, { headers });
+  }
+
 }
