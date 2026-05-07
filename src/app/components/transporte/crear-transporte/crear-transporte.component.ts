@@ -105,27 +105,41 @@ export class CrearTransporteComponent implements OnInit {
     }
   }
 
-  guardar(): void {
-      if (this.transporteForm.invalid) {
-        this.transporteForm.markAllAsTouched();
-        return;
+  guardar() {
+    if (this.transporteForm.invalid) {
+      this.transporteForm.markAllAsTouched();
+      return;
+    }
+
+    const formValues = this.transporteForm.value;
+
+    // Intentamos buscar el nombre con diferentes variantes de propiedad comunes
+    const objetoMarca = this.marcas.find(m => (m.idmarca || m.idMarca || m.id) === formValues.idMarca);
+    const objetoLinea = this.lineas.find(l => (l.idlinea || l.idLinea || l.id) === formValues.idLinea);
+    const objetoColor = this.colores.find(c => (c.idcolor || c.idColor || c.id) === formValues.idColor);
+
+    const datosParaEnviar = {
+      ...formValues,
+      // Extraemos el nombre o descripcion, lo que exista
+      nombreMarca: objetoMarca?.nombre || objetoMarca?.descripcion || 'N/A',
+      nombreLinea: objetoLinea?.nombre || objetoLinea?.descripcion || 'N/A',
+      nombreColor: objetoColor?.nombre || objetoColor?.descripcion || 'N/A'
+    };
+
+    console.log('DATOS QUE SALEN HACIA EL BACKEND:', datosParaEnviar);
+
+    this.transporteService.crearTransporte(datosParaEnviar).subscribe({
+      next: (res) => {
+        console.log('Respuesta del servidor:', res);
+        alert('Transporte creado con éxito');
+        this.router.navigate(['/transportes']);
+      },
+      error: (err) => {
+        const mensaje = typeof err.error === 'string' ? err.error : JSON.stringify(err.error);
+        alert('Error al crear: ' + mensaje);
       }
-
-      const placaIngresada = this.transporteForm.get('placa')?.value;
-
-      this.transporteService.crearTransporte(this.transporteForm.getRawValue()).subscribe({
-        next: () => {
-          alert('Se creó con éxito.'); // Mensaje de éxito solicitado
-          this.router.navigate(['/transporte']);
-        },
-        error: (err: any) => {
-          // Si el backend lanza la BusinessException, err.error traerá el texto
-          // "Ya existe un transporte registrado con la placa X"
-          alert(err.error || 'Ya existe un transporte registrado con la placa' + placaIngresada);
-        }
-      });
+    });
   }
-
   cancelar(): void {
     this.router.navigate(['/transporte']);
   }

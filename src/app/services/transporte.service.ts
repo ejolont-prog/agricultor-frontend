@@ -36,9 +36,8 @@ export class TransporteService {
   }
 
   crearTransporte(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/crear`, data, {
-      headers: this.getHeaders()
-    });
+    // El interceptor se encargará de poner el token automáticamente
+    return this.http.post(`${this.apiUrl}/crear`, data);
   }
 
   listarTransporteDisponibles(): Observable<any[]> {

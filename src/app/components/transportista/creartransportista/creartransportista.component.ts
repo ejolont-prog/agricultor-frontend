@@ -67,35 +67,44 @@ export class CrearTransportistaComponent implements OnInit {
     });
   }
 
-  crearTransportista() {
-    if (this.transportistaForm.invalid) {
-      this.transportistaForm.markAllAsTouched();
-      return; // Este return es para detener la función si el formulario es inválido
-    }
+ crearTransportista() {
+   if (this.transportistaForm.invalid) {
+     this.transportistaForm.markAllAsTouched();
+     return;
+   }
 
-    const datosTransportista = this.transportistaForm.value;
+   const formValues = this.transportistaForm.value;
 
-    this.transportistaService.crearTransportista(datosTransportista).subscribe({
-      next: (res) => {
-        console.log('¡Transportista guardado!', res);
-        alert('Transportista creado exitosamente');
-        // Si quieres limpiar el formulario después de guardar:
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
-        // Capturamos el mensaje de nuestras excepciones (CUI, Edad, Licencia)
-        let mensajeError = 'Ocurrió un error al procesar la solicitud';
+   // CORRECCIÓN: Usamos 'tipoLicencia' que es el nombre que pusiste en el fb.group
+   const idSeleccionado = formValues.tipoLicencia;
 
-        if (typeof err.error === 'string') {
-          mensajeError = err.error;
-        } else if (err.error && err.error.message) {
-          mensajeError = err.error.message;
-        }
+   // Buscamos el nombre en la lista
+   const licenciaEncontrada = this.tiposLicencia.find(l =>
+     (l.id == idSeleccionado) || (l.idcatalogo == idSeleccionado)
+   );
 
-        alert(mensajeError);
-      }
-    });
-  }
+   const datosParaEnviar = {
+     cui: formValues.cui,
+     nombreCompleto: formValues.nombreCompleto,
+     fechaNacimiento: formValues.fechaNacimiento,
+     idTipoLicencia: idSeleccionado, // Ahora sí llevará el ID numérico
+     nombreTipoLicencia: licenciaEncontrada ? licenciaEncontrada.nombre : 'No especificada',
+     fechaVencimientoLicencia: formValues.fechaVencimientoLicencia
+   };
+
+   console.log('Datos enviados:', datosParaEnviar);
+
+   this.transportistaService.crearTransportista(datosParaEnviar).subscribe({
+     next: (res: any) => {
+       alert('Transportista creado exitosamente');
+       this.router.navigate(['/transportistas']);
+     },
+     error: (err: any) => {
+       const mensaje = typeof err.error === 'string' ? err.error : 'Error de validación';
+       alert(mensaje);
+     }
+   });
+ }
 
   cancelar(): void {
     this.router.navigate(['/transportista']);
