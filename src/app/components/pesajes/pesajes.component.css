@@ -92,3 +92,13 @@
   color: white;
   font-size: 0.75rem;
 }
+
+/* Cuando el botón de la tabla esté deshabilitado */
+.detail-btn:disabled {
+  background-color: #9e9e9e !important; /* Gris */
+  color: #ffffff !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none !important;
+  box-shadow: none !important;
+}

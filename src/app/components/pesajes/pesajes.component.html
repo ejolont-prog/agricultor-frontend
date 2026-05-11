@@ -48,8 +48,8 @@
             <button
               class="btn detail-btn"
               [routerLink]="['/parcialidades']"
-              [queryParams]="{ idPesaje: p.idpesaje }">
-              Ver Detalle
+              [queryParams]="{ idPesaje: p.idpesaje }"
+              [disabled]="p.estado === 162"> Ver Detalle
             </button>
           </td>
         </tr>
