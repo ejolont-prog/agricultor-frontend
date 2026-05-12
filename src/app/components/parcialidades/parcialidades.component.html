@@ -27,14 +27,14 @@
         <ng-container matColumnDef="idtransporte">
           <th mat-header-cell *matHeaderCellDef> Placa Transporte </th>
           <td mat-cell *matCellDef="let p">
-            {{ p.transporte?.placa || 'N/A' }}
+            {{ p.placa || 'Sin placa' }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="idtransportista">
           <th mat-header-cell *matHeaderCellDef> Transportista </th>
           <td mat-cell *matCellDef="let p">
-            {{ p.transportista?.nombreCompleto || 'Desconocido' }}
+            {{ p.nombrecompleto || 'Desconocido' }}
           </td>
         </ng-container>
 
@@ -44,6 +44,7 @@
             {{ p.tipomedida || 'N/A' }}
           </td>
         </ng-container>
+
         <ng-container matColumnDef="peso">
           <th mat-header-cell *matHeaderCellDef> Peso </th>
           <td mat-cell *matCellDef="let p"> {{p.pesoestimadoparcialidad | number:'1.2-2'}} </td>
