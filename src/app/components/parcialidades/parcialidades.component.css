@@ -18,6 +18,44 @@
   margin-bottom: 30px;
 }
 
+
+/* --- AJUSTE PARA EL BOTÓN DE QR --- */
+
+/* Contenedor para que los botones de la tabla estén uno al lado del otro */
+.action-container {
+  display: flex;
+  gap: 10px; /* Espacio entre el ojo y el QR */
+  align-items: center;
+}
+
+/* Estilo específico para el botón de QR */
+.btn.qr-btn {
+  border: none;
+  background-color: var(--accent-gold); /* Usamos tu color oro */
+  color: var(--coffee-dark);          /* Texto en color café */
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  border: 1px solid rgba(43, 23, 14, 0.1); /* Bordes sutiles café */
+}
+
+/* Efecto al pasar el mouse (igual que tus otros botones) */
+.btn.qr-btn:hover {
+  transform: scale(1.1);
+  background-color: var(--neon-glow); /* Brillo neón al hacer hover */
+  box-shadow: 0 0 10px var(--neon-glow);
+}
+
+/* Ajuste de tamaño del icono QR */
+.qr-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
 .title-group h1 { color: var(--coffee-dark); font-weight: 800; margin: 0; }
 .title-group p { color: var(--melon-text); margin: 0; }
 

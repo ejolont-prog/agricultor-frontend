@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Código QR de Envío</h2>
+
+<mat-dialog-content class="qr-container">
+  <qrcode
+    [qrdata]="data.qrData"
+    [width]="256"
+    [errorCorrectionLevel]="'M'">
+  </qrcode>
+
+  <div class="info-resumen">
+    <p><strong>ID Parcialidad:</strong> #{{data.info.idparcialidad}}</p>
+
+    <p><strong>Placa:</strong> {{ data.info.placa || 'No disponible' }}</p>
+
+    <p><strong>Peso Estimado:</strong> {{data.info.pesoestimadoparcialidad | number:'1.2-2'}}</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+  <button mat-raised-button color="primary" (click)="imprimirQR()">
+    <mat-icon>print</mat-icon> Imprimir
+  </button>
+</mat-dialog-actions>
