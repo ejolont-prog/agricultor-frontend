@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import Swal from 'sweetalert2';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-creartransportista',
@@ -48,11 +50,24 @@ export class CrearTransportistaComponent implements OnInit {
               Validators.required,
               Validators.pattern('^[0-9]{13}$')
             ]],
-      nombreCompleto: ['', Validators.required],
+      nombreCompleto: ['', [Validators.required, this.validarNombreApellido()]],
       fechaNacimiento: ['', Validators.required],
       tipoLicencia: ['', Validators.required],
       fechaVencimientoLicencia: ['', Validators.required]
     });
+  }
+
+  validarNombreApellido(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const valor = control.value ? control.value.trim() : '';
+      if (!valor) return null;
+
+      // Dividimos por espacios y filtramos palabras que tengan 3 o más caracteres
+      const palabras = valor.split(/\s+/).filter((p: string) => p.length >= 3);
+
+      // Si hay menos de 2 palabras válidas, retornamos el error
+      return palabras.length >= 2 ? null : { nombreInvalido: true };
+    };
   }
 
   cargarTiposLicencia(): void {
@@ -67,45 +82,114 @@ export class CrearTransportistaComponent implements OnInit {
     });
   }
 
- crearTransportista() {
-   if (this.transportistaForm.invalid) {
-     this.transportistaForm.markAllAsTouched();
-     return;
-   }
+  onlyNumbers(event: KeyboardEvent) {
+    const pattern = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
 
-   const formValues = this.transportistaForm.value;
+  onlyLetters(event: KeyboardEvent) {
+    // Permitir letras (mayúsculas y minúsculas), tildes, eñes y espacios
+    const pattern = /[a-zA-ZáéíóúÁÉÍÓÚñÑ ]/;
+    const inputChar = String.fromCharCode(event.charCode);
 
-   // CORRECCIÓN: Usamos 'tipoLicencia' que es el nombre que pusiste en el fb.group
-   const idSeleccionado = formValues.tipoLicencia;
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
 
-   // Buscamos el nombre en la lista
-   const licenciaEncontrada = this.tiposLicencia.find(l =>
-     (l.id == idSeleccionado) || (l.idcatalogo == idSeleccionado)
-   );
+  filterDateInput(event: KeyboardEvent): void {
+    // Teclas permitidas: Números, retroceso, tab, flechas, suprimir y los separadores / o -
+    const allowedKeys = [
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', '/', '-'
+    ];
 
-   const datosParaEnviar = {
-     cui: formValues.cui,
-     nombreCompleto: formValues.nombreCompleto,
-     fechaNacimiento: formValues.fechaNacimiento,
-     idTipoLicencia: idSeleccionado, // Ahora sí llevará el ID numérico
-     nombreTipoLicencia: licenciaEncontrada ? licenciaEncontrada.nombre : 'No especificada',
-     fechaVencimientoLicencia: formValues.fechaVencimientoLicencia
-   };
+    if (!allowedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
 
-   console.log('Datos enviados:', datosParaEnviar);
+  registrarTransportista() {
+    if (this.transportistaForm.valid) {
 
-   this.transportistaService.crearTransportista(datosParaEnviar).subscribe({
-     next: (res: any) => {
-       alert('Transportista creado exitosamente');
-       this.router.navigate(['/transportistas']);
-     },
-     error: (err: any) => {
-       const mensaje = typeof err.error === 'string' ? err.error : 'Error de validación';
-       alert(mensaje);
-     }
-   });
- }
+      // --- 1. PREPARACIÓN DE DATOS (Mapeo para el Backend) ---
+      const formValue = this.transportistaForm.value;
 
+      // Buscamos el nombre de la licencia en la lista que cargamos del catálogo
+      const licenciaSeleccionada = this.tiposLicencia.find(l => l.id === formValue.tipoLicencia);
+
+      // Creamos el objeto exactamente como lo espera el DTO de Java
+      const payload = {
+        cui: formValue.cui,
+        nombreCompleto: formValue.nombreCompleto,
+        fechaNacimiento: formValue.fechaNacimiento,
+        fechaVencimientoLicencia: formValue.fechaVencimientoLicencia,
+        idTipoLicencia: formValue.tipoLicencia, // <--- ID para Agricultor
+        nombreTipoLicencia: licenciaSeleccionada ? licenciaSeleccionada.nombre : null // <--- Texto para Beneficio
+      };
+
+      // 2. Loading inicial
+      Swal.fire({
+        title: 'Procesando registro',
+        text: 'Comunicando con los servicios centrales...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // --- 3. ENVÍO DEL PAYLOAD (No el form.value directo) ---
+      this.transportistaService.crearTransportista(payload).subscribe({
+        next: (res) => {
+          Swal.close();
+          Swal.fire({
+            icon: 'success',
+            title: 'Se creó con éxito',
+            text: 'El transportista se ha creado con éxito',
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#2c3e50'
+          }).then(() => {
+            this.transportistaForm.reset();
+            this.router.navigate(['/dashboard']);
+          });
+        },
+        error: (err) => {
+          Swal.close();
+          let titulo = 'Error';
+          let mensaje = 'No se pudo completar el registro.';
+          const errorBackend = err.error;
+
+          if (typeof errorBackend === 'string') {
+            mensaje = errorBackend;
+          } else if (errorBackend && errorBackend.message) {
+            mensaje = errorBackend.message;
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: titulo,
+            text: mensaje,
+            confirmButtonColor: '#2c3e50',
+            confirmButtonText: 'Ok'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.router.navigate(['/transportista']);
+            }
+          });
+        }
+      });
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Por favor, completa correctamente todos los campos obligatorios.',
+        confirmButtonColor: '#2c3e50'
+      });
+    }
+  }
   cancelar(): void {
     this.router.navigate(['/transportista']);
   }

@@ -13,31 +13,37 @@
     <mat-card-content>
       <form [formGroup]="transportistaForm" class="registro-form">
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre Completo</mat-label>
-          <input matInput formControlName="nombreCompleto" placeholder="Ej. Juan Manuel Arriola">
-          <mat-icon matSuffix>person</mat-icon>
-        </mat-form-field>
+
 
         <div class="form-grid">
           <mat-form-field appearance="outline">
-            <mat-label>CUI (DPI)</mat-label>
-            <input matInput formControlName="cui" placeholder="13 dígitos" maxlength="13">
+            <mat-label>CUI</mat-label>
+            <input matInput formControlName="cui" placeholder="13 dígitos" maxlength="13" inputmode="numeric"
+                   (keypress)="onlyNumbers($event)">
             <mat-icon matSuffix>fingerprint</mat-icon>
             <mat-error *ngIf="transportistaForm.get('cui')?.invalid">
-              El CUI debe tener 13 números
+              CUI debe contener 13 dígitos
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre Completo</mat-label>
+            <input matInput formControlName="nombreCompleto" placeholder="Ej. Juan Manuel Arriola" (keypress)="onlyLetters($event)">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="transportistaForm.get('nombreCompleto')?.hasError('nombreInvalido')">
+              Debe colocar un nombre y un apellido como mínimo
             </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Fecha de Nacimiento</mat-label>
-            <input matInput [matDatepicker]="pickerNac" [max]="maxFechaNac" formControlName="fechaNacimiento">
+            <mat-label>Fecha Nacimiento</mat-label>
+            <input matInput [matDatepicker]="pickerNac" [max]="maxFechaNac" formControlName="fechaNacimiento" (keydown)="filterDateInput($event)">
             <mat-datepicker-toggle matIconSuffix [for]="pickerNac"></mat-datepicker-toggle>
             <mat-datepicker #pickerNac></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Tipo de Licencia</mat-label>
+            <mat-label>Tipo Licencia</mat-label>
             <mat-select formControlName="tipoLicencia">
               <mat-option *ngFor="let licencia of tiposLicencia" [value]="licencia.id">
                 {{licencia.nombre}}
@@ -46,8 +52,8 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Vencimiento Licencia</mat-label>
-            <input matInput [matDatepicker]="pickerVen" formControlName="fechaVencimientoLicencia">
+            <mat-label>Fecha Vencimiento Licencia</mat-label>
+            <input matInput [matDatepicker]="pickerVen" formControlName="fechaVencimientoLicencia" (keydown)="filterDateInput($event)">
             <mat-datepicker-toggle matIconSuffix [for]="pickerVen"></mat-datepicker-toggle>
             <mat-datepicker #pickerVen></mat-datepicker>
           </mat-form-field>
@@ -55,16 +61,16 @@
 
         <div class="form-actions">
           <button mat-button class="cancel-btn" type="button" (click)="cancelar()">
-            CANCELAR
+            Cancelar
           </button>
 
           <button mat-fab extended
                   class="create-btn"
                   type="button"
                   [disabled]="transportistaForm.invalid"
-                  (click)="crearTransportista()">
+                  (click)="registrarTransportista()">
             <mat-icon>check_circle</mat-icon>
-            CREAR TRANSPORTISTA
+            Crear
           </button>
         </div>
       </form>
