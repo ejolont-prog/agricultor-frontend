@@ -5,9 +5,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ParcialidadService } from '../../services/parcialidad.service';
-import { PesajeService } from '../../services/pesaje.service'; // Importante para validar
+import { PesajeService } from '../../services/pesaje.service';
 import { Parcialidad } from '../../models/parcialidad.model';
 import { Pesaje } from '../../models/pesaje.model';
+
+// AGREGADO: Importaciones de Material Dialog
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { QrDialogComponent } from '../qr-dialog/qr-dialog.component';
 
 @Component({
   selector: 'app-parcialidades',
@@ -17,7 +21,8 @@ import { Pesaje } from '../../models/pesaje.model';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    MatDialogModule // AGREGADO: Importante para que el diálogo funcione
   ],
   templateUrl: './parcialidades.component.html',
   styleUrls: ['./parcialidades.component.css']
@@ -27,15 +32,15 @@ export class ParcialidadesComponent implements OnInit {
   dataSource: Parcialidad[] = [];
   idPesajePadre!: number;
 
-  // Variables de control de seguridad
   estadoPesajePadre: number = 0;
   cargandoInfo: boolean = true;
-
+  noCuentaPadre: string = '';
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private parcialidadService: ParcialidadService,
-    private pesajeService: PesajeService // Inyectado para verificar el estado
+    private pesajeService: PesajeService,
+    private dialog: MatDialog // AGREGADO: Inyección del servicio de diálogo
   ) {}
 
   ngOnInit(): void {
@@ -50,24 +55,24 @@ export class ParcialidadesComponent implements OnInit {
   cargarDatosYValidarEstado() {
     this.cargandoInfo = true;
 
-    // 1. Cargar el listado de parcialidades
+    // 1. Cargar parcialidades (esto ya lo tienes)
     this.parcialidadService.listarPorPesaje(this.idPesajePadre).subscribe({
-      next: (data) => {
-        this.dataSource = data;
-      },
+      next: (data) => { this.dataSource = data; },
       error: (err) => console.error('Error al cargar parcialidades:', err)
     });
 
-    // 2. Validar el estado del pesaje padre
+    // 2. BUSCAR EL PESAJE PARA SACAR EL NO. CUENTA
     this.pesajeService.obtenerMisPesajes().subscribe({
       next: (pesajes: Pesaje[]) => {
         const pesajeActual = pesajes.find(p => p.idpesaje === this.idPesajePadre);
 
-        // Usamos el operador ?. y || 0 para evitar errores de "undefined"
-        this.estadoPesajePadre = pesajeActual?.estado || 0;
+        if (pesajeActual) {
+          this.estadoPesajePadre = pesajeActual.estado || 0;
+          // CAPTURAMOS EL NO. CUENTA QUE VIENE DE LA VISTA ANTERIOR
+          this.noCuentaPadre = pesajeActual.nocuenta || 'Pendiente';
+        }
 
         this.cargandoInfo = false;
-        console.log('Estado del pesaje validado:', this.estadoPesajePadre);
       },
       error: (err) => {
         console.error('Error al validar estado:', err);
@@ -77,12 +82,10 @@ export class ParcialidadesComponent implements OnInit {
   }
 
   irANuevaParcialidad() {
-    // Seguridad nivel 1: No permitir navegación si el estado es 162
     if (this.estadoPesajePadre === 162) {
       console.warn('Acción bloqueada: El pesaje ya está finalizado.');
       return;
     }
-
     this.router.navigate(['/parcialidades/nueva'], {
       queryParams: { idPesaje: this.idPesajePadre }
     });
@@ -90,5 +93,26 @@ export class ParcialidadesComponent implements OnInit {
 
   regresar() {
     this.router.navigate(['/pesajes']);
+  }
+
+  generarQR(parcialidad: Parcialidad) {
+    const datosQR = {
+      idParcialidad: parcialidad.idparcialidad,
+      idPesaje: parcialidad.idpesaje,
+      noCuenta: this.noCuentaPadre, // <--- AHORA EL QR LLEVA EL NO. CUENTA
+      placa: (parcialidad as any).placa || 'Sin placa',
+      pesoDeclarado: parcialidad.pesoestimadoparcialidad
+    };
+
+    this.dialog.open(QrDialogComponent, {
+      data: {
+        qrData: JSON.stringify(datosQR),
+        info: {
+          ...parcialidad,
+          noCuenta: this.noCuentaPadre // También lo pasamos para mostrarlo en el texto del diálogo
+        }
+      },
+      width: '400px'
+    });
   }
 }

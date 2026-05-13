@@ -15,6 +15,29 @@
   margin: 0 auto;
 }
 
+.qr-btn {
+  background-color: #f3f4f6;
+  color: #1a4d2e; /* Verde oscuro como tu logo */
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  margin-left: 5px;
+  transition: all 0.3s;
+}
+
+.qr-btn:hover {
+  background-color: #1a4d2e;
+  color: white;
+  cursor: pointer;
+}
+
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
 /* HEADER */
 .section-header {
   display: flex;
