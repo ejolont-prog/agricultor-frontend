@@ -45,25 +45,23 @@ export class TransportistaComponent implements OnInit { // Agregamos el implemen
     this.cargarTransportistas();
   }
 
-  cargarTransportistas(): void {
-    this.transportistaService.listarTransportistas().subscribe({
-      next: (data) => {
-        this.dataSource = data.map(t => ({
-          cui: t.cui,
-          nombre: t.nombreCompleto,
-          tipoLicencia: t.tipoLicencia,
-          fechaVencimiento: t.fechaVencimientoLicencia,
-          // Ahora 'nombreEstado' trae el valor real (Ej: "Activo", "Pendiente") desde la tabla catalogos
-          estado: t.nombreEstado,
-          disponible: t.disponible ? 'Sí' : 'No',
-          pesaje: 'No'
-        }));
-      },
-      error: (err) => {
-        console.error('Error al cargar transportistas:', err);
-      }
-    });
-  }
+ cargarTransportistas(): void {
+   this.transportistaService.listarTransportistas().subscribe({
+     next: (data: any[]) => {
+       this.dataSource = data.map(t => ({
+         cui: t.cui,
+         nombre: t.nombrecompleto, // Verifica si el Map lo devuelve en minúsculas
+         tipoLicencia: t.nombre_licencia,
+         fechaVencimiento: t.fechavencimientolicencia,
+         estado: t.nombre_estado,
+         disponible: t.disponible ? 'Sí' : 'No',
+         // Si existe nocuenta, lo muestra, si no, muestra 'No'
+         pesaje: t.nocuenta ? t.nocuenta : 'No'
+       }));
+     },
+     error: (err) => console.error('Error al cargar transportistas:', err)
+   });
+ }
 
 
 }

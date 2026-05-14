@@ -55,7 +55,7 @@ export class TransporteComponent implements OnInit {
           modelo: t.modelo || 'N/A',
           estado: t.estado || 'Pendiente',
           disponible: t.disponible ? 'Sí' : 'No',
-          pesaje: 'No'
+          pesaje: t.nocuenta ? t.nocuenta : 'No'
         }));
       },
       error: (err: any) => console.error('Error al cargar transportes:', err)
