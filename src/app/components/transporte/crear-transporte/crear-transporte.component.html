@@ -1,4 +1,4 @@
-<div class="page-container">
+  <div class="page-container">
   <div class="section-header">
     <button mat-button class="back-btn" (click)="cancelar()">
       <mat-icon>arrow_back</mat-icon> REGRESAR
@@ -25,10 +25,19 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Placa</mat-label>
-          <input matInput formControlName="placa" placeholder="Ej: P123ABC" uppercase>
+          <input
+            matInput
+            formControlName="placa"
+            placeholder="Ej: 000AAA"
+            style="text-transform: uppercase;"
+            (keypress)="bloquearEspeciales($event)"
+            style="text-transform: uppercase;"
+          > <!-- Asegura visualmente las mayúsculas -->
+
           <mat-error *ngIf="transporteForm.get('placa')?.hasError('pattern')">
-            El formato debe ser tipo placa (Ej: P123ABC)
+            Formato de placa incorrecto, ej: 000AAA
           </mat-error>
+
           <mat-error *ngIf="transporteForm.get('placa')?.hasError('required')">
             La placa es obligatoria
           </mat-error>
@@ -38,6 +47,13 @@
           <mat-label>Marca</mat-label>
           <mat-select formControlName="idMarca" (selectionChange)="onMarcaChange($event.value)">
             <mat-option *ngFor="let m of marcas" [value]="m.id">{{m.nombre}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Color</mat-label>
+          <mat-select formControlName="idColor">
+            <mat-option *ngFor="let c of colores" [value]="c.id">{{c.nombre}}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -51,20 +67,28 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Modelo (Año)</mat-label>
+          <mat-label>Modelo</mat-label>
           <mat-select formControlName="idModelo">
             <mat-option *ngFor="let anio of aniosModelo" [value]="anio">
               {{ anio }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="transporteForm.get('idModelo')?.hasError('required')">
+            El año del modelo es obligatorio
+          </mat-error>
+
+          <!-- Error de año menor a 1980 -->
+          <mat-error *ngIf="transporteForm.get('idModelo')?.hasError('min')">
+            El año no puede ser anterior a 1980
+          </mat-error>
+
+          <!-- Error de año mayor al actual -->
+          <mat-error *ngIf="transporteForm.get('idModelo')?.hasError('max')">
+            El año no puede ser mayor al año actual
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Color</mat-label>
-          <mat-select formControlName="idColor">
-            <mat-option *ngFor="let c of colores" [value]="c.id">{{c.nombre}}</mat-option>
-          </mat-select>
-        </mat-form-field>
+
 
       </div>
 
@@ -73,7 +97,7 @@
           CANCELAR
         </button>
         <button mat-raised-button type="submit" class="create-btn" [disabled]="transporteForm.invalid">
-          <mat-icon>save</mat-icon> CREAR TRANSPORTE
+          <mat-icon>save</mat-icon> Crear
         </button>
       </div>
     </form>
