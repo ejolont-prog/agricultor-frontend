@@ -29,7 +29,7 @@ export class DashboardComponent {
   // Estos son los datos que alimentan las tarjetas del menú
   productos = [
     { nombre: 'Pesajes', icon: 'scale', route: '/pesajes' },
-    { nombre: 'Transporte', icon: 'local_shipping', route: '/transporte' },
+    { nombre: 'Transportes', icon: 'local_shipping', route: '/transporte' },
     { nombre: 'Transportistas', icon: 'badge', route: '/transportista' }
   ];
 

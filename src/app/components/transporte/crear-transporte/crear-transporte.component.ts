@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crear-transporte',
@@ -49,30 +50,45 @@ export class CrearTransporteComponent implements OnInit {
     this.cargarCatalogosIniciales();
   }
 
-  // Genera años lógicos (Ej: 2027 a 1986)
   generarAnios(): void {
     const anioActual = new Date().getFullYear();
-    const anioSiguiente = anioActual + 1;
-    const limiteAtras = anioActual - 40;
+    const limiteAtras = 1980; // Límite mínimo solicitado
 
-    for (let i = anioSiguiente; i >= limiteAtras; i--) {
+    this.aniosModelo = []; // Limpiamos el arreglo
+    for (let i = anioActual; i >= limiteAtras; i--) {
       this.aniosModelo.push(i);
     }
   }
 
   // En Angular (crear-transporte.component.ts)
   initForm(): void {
+    const anioActual = new Date().getFullYear();
     this.transporteForm = this.fb.group({
       placa: ['', [
-            Validators.required,
-            Validators.pattern(/^[PCMAUTS]\d{3}[A-Z]{3}$/i) // 'i' para que no importe si es mayúscula o minúscula
-          ]],
+                Validators.required,
+                Validators.pattern(/^\d{3}[a-zA-Z]{3}$/)
+              ]],
       idTipoPlaca: ['', Validators.required],
       idMarca: ['', Validators.required],
       idLinea: ['', Validators.required],
-      idModelo: ['', Validators.required], // <--- Este nombre debe coincidir con el payload.get("idModelo") en Java
+      idModelo: ['', [
+            Validators.required,
+            Validators.min(1980),
+            Validators.max(anioActual)
+          ]],
       idColor: ['', Validators.required]
     });
+  }
+
+  bloquearEspeciales(event: KeyboardEvent): boolean {
+    // Solo permite números y letras
+    const regExp = /[a-zA-Z0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    if (!regExp.test(inputChar)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 
   cargarCatalogosIniciales(): void {
@@ -106,39 +122,86 @@ export class CrearTransporteComponent implements OnInit {
   }
 
   guardar() {
-    if (this.transporteForm.invalid) {
+    if (this.transporteForm.valid) {
+
+      // --- 1. PREPARACIÓN DE DATOS (Mapeo idéntico al de transportistas) ---
+      const formValues = this.transporteForm.value;
+
+      const objetoMarca = this.marcas.find(m => (m.idmarca || m.idMarca || m.id) === formValues.idMarca);
+      const objetoLinea = this.lineas.find(l => (l.idlinea || l.idLinea || l.id) === formValues.idLinea);
+      const objetoColor = this.colores.find(c => (c.idcolor || c.idColor || c.id) === formValues.idColor);
+      const objetoTipoPlaca = this.tiposPlacas.find(p => (p.id || p.idtipoplaca) === formValues.idTipoPlaca);
+
+      // Construimos el payload exactamente como lo esperan los servicios
+      const datosParaEnviar = {
+        ...formValues,
+        placa: formValues.placa.toUpperCase(),
+        nombreMarca: objetoMarca?.nombre || objetoMarca?.descripcion || 'N/A',
+        nombreLinea: objetoLinea?.nombre || objetoLinea?.descripcion || 'N/A',
+        nombreColor: objetoColor?.nombre || objetoColor?.descripcion || 'N/A',
+        nombreTipoPlaca: objetoTipoPlaca?.nombre || 'N/A'
+      };
+
+      // --- 2. LOADING INICIAL ---
+      Swal.fire({
+        title: 'Procesando registro',
+        text: 'Comunicando con los servicios centrales...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // --- 3. ENVÍO DEL PAYLOAD ---
+      this.transporteService.crearTransporte(datosParaEnviar).subscribe({
+        next: (res) => {
+          Swal.close();
+          Swal.fire({
+            icon: 'success',
+            title: 'Se creó con éxito',
+            text: 'El transporte se ha creado con éxito',
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#2c3e50'
+          }).then(() => {
+            this.transporteForm.reset();
+            this.router.navigate(['/dashboard']); // Redirección al listado
+          });
+        },
+        error: (err) => {
+          Swal.close();
+          let mensaje = 'No se pudo completar el registro del transporte.';
+          const errorBackend = err.error;
+
+          // Manejo de errores de placa duplicada o validaciones de negocio
+          if (typeof errorBackend === 'string') {
+            mensaje = errorBackend;
+          } else if (errorBackend && errorBackend.message) {
+            mensaje = errorBackend.message;
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: mensaje,
+            confirmButtonColor: '#2c3e50',
+            confirmButtonText: 'Ok'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.router.navigate(['/transporte']);
+            }
+          });
+        }
+      });
+    } else {
+      // --- 4. VALIDACIÓN DE CAMPOS ---
       this.transporteForm.markAllAsTouched();
-      return;
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atención',
+        text: 'Por favor, completa correctamente todos los campos obligatorios.',
+        confirmButtonColor: '#2c3e50'
+      });
     }
-
-    const formValues = this.transporteForm.value;
-
-    // Intentamos buscar el nombre con diferentes variantes de propiedad comunes
-    const objetoMarca = this.marcas.find(m => (m.idmarca || m.idMarca || m.id) === formValues.idMarca);
-    const objetoLinea = this.lineas.find(l => (l.idlinea || l.idLinea || l.id) === formValues.idLinea);
-    const objetoColor = this.colores.find(c => (c.idcolor || c.idColor || c.id) === formValues.idColor);
-
-    const datosParaEnviar = {
-      ...formValues,
-      // Extraemos el nombre o descripcion, lo que exista
-      nombreMarca: objetoMarca?.nombre || objetoMarca?.descripcion || 'N/A',
-      nombreLinea: objetoLinea?.nombre || objetoLinea?.descripcion || 'N/A',
-      nombreColor: objetoColor?.nombre || objetoColor?.descripcion || 'N/A'
-    };
-
-    console.log('DATOS QUE SALEN HACIA EL BACKEND:', datosParaEnviar);
-
-    this.transporteService.crearTransporte(datosParaEnviar).subscribe({
-      next: (res) => {
-        console.log('Respuesta del servidor:', res);
-        alert('Transporte creado con éxito');
-        this.router.navigate(['/transportes']);
-      },
-      error: (err) => {
-        const mensaje = typeof err.error === 'string' ? err.error : JSON.stringify(err.error);
-        alert('Error al crear: ' + mensaje);
-      }
-    });
   }
   cancelar(): void {
     this.router.navigate(['/transporte']);
