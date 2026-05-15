@@ -1,27 +1,49 @@
 <div class="page-container">
+  <!-- Encabezado con el nuevo diseño -->
+  <header class="section-header">
+    <div class="title-group">
+      <h1>Registrar Nuevo Pesaje</h1>
+      <p>Complete los datos para generar un nuevo registro de pesaje</p>
+    </div>
+    <div class="action-buttons">
+      <button mat-button class="back-btn" (click)="cancelar()">
+        <mat-icon>arrow_back</mat-icon> Regresar
+      </button>
+    </div>
+  </header>
+
   <div class="form-card">
-    <header class="form-header">
-      <h2 class="title-custom">Registrar Nuevo Pesaje</h2>
-      <p class="subtitle">Complete los datos para generar un nuevo registro de pesaje</p>
-    </header>
-
-    <form (ngSubmit)="crearPesaje()" class="custom-form">
+    <form #pesajeForm="ngForm" (ngSubmit)="crearPesaje()" class="custom-form">
       <div class="form-grid">
+        <!-- Estado -->
+        <div class="form-group">
+          <label class="text-brown">Estado</label>
+          <select
+            class="custom-input readonly-input"
+            [(ngModel)]="estadoSeleccionado"
+            name="estadoPesaje"
+            required
+            [disabled]="true">
+            <option *ngFor="let e of estadosPesaje" [value]="e.id">{{ e.nombre }}</option>
+          </select>
+        </div>
 
+        <!-- Medida de Peso -->
         <div class="form-group">
           <label class="text-brown">Medida de Peso</label>
           <select
             class="custom-input"
             [(ngModel)]="unidadSeleccionada"
-            name="unidadMedida"> <option [value]="null" disabled>Seleccione medida...</option>
+            name="unidadMedida"
+            required>
+            <option [value]="null" disabled>Seleccione medida...</option>
             <option *ngFor="let u of unidadesMedida" [value]="u.id">
               {{ u.nombre }} ({{ u.abreviatura }})
             </option>
           </select>
         </div>
 
-
-
+        <!-- Peso Total -->
         <div class="form-group">
           <label class="text-brown">Peso Total Actual</label>
           <input
@@ -29,21 +51,12 @@
             class="custom-input"
             [(ngModel)]="pesoIngresado"
             name="pesoTotal"
-            placeholder="0.00">
+            placeholder="0.00"
+            required
+            min="0.01">
         </div>
 
-        <div class="form-group">
-          <label class="text-brown">Estado Inicial</label>
-          <select
-            class="custom-input"
-            [(ngModel)]="estadoSeleccionado"
-            name="estadoPesaje"
-            [disabled]="true"> <option *ngFor="let e of estadosPesaje" [value]="e.id">
-            {{ e.nombre }}
-          </option>
-          </select>
-        </div>
-
+        <!-- Fecha -->
         <div class="form-group">
           <label class="text-brown">Fecha de Creación</label>
           <input type="date" class="custom-input readonly-input" [value]="fechaActual" readonly>
@@ -51,11 +64,12 @@
       </div>
 
       <div class="form-actions">
-        <button type="button" class="btn back-btn" (click)="cancelar()">
+        <button type="button" class="btn cancel-btn" (click)="cancelar()">
           Cancelar
         </button>
-        <button type="submit" class="btn add-btn">
-          Crear Pesaje
+        <!-- El botón se habilita solo si el formulario es válido -->
+        <button type="submit" class="btn add-btn" [disabled]="pesajeForm.invalid">
+          Crear
         </button>
       </div>
     </form>

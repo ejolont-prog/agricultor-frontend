@@ -1,7 +1,7 @@
 <div class="page-container">
   <header class="section-header">
     <button mat-button class="back-btn" (click)="regresar()">
-      <mat-icon>arrow_back</mat-icon> Volver a Listado
+      <mat-icon>arrow_back</mat-icon> Regresar
     </button>
     <div class="title-group">
       <h1>Nueva Parcialidad</h1>
@@ -13,65 +13,85 @@
     <mat-card-content>
       <form [formGroup]="parcialidadForm" class="registro-form">
 
+        <!-- CAMBIO: Título "Peso" y validación mínima 1 -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Peso Total</mat-label>
-          <input matInput type="number" formControlName="pesoestimadoparcialidad" placeholder="0.00">
+          <mat-label>Peso</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="pesoestimadoparcialidad"
+            placeholder="Ingrese el peso (mínimo 1)"
+            min="1"
+            (keypress)="soloNumeros($event)"
+            oninput="if(this.value.length > 0 && this.value < 1) this.value = 1;">
           <mat-icon matSuffix>scale</mat-icon>
+
+          <mat-error *ngIf="parcialidadForm.get('pesoestimadoparcialidad')?.hasError('required')">
+            El peso es obligatorio.
+          </mat-error>
           <mat-error *ngIf="parcialidadForm.get('pesoestimadoparcialidad')?.hasError('min')">
-            El peso debe ser mayor a 0
+            El valor mínimo permitido es 1.
           </mat-error>
         </mat-form-field>
 
         <div class="form-grid">
+          <!-- CAMBIO: Título "Transportes disponibles" y mensaje de selección -->
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Transporte</mat-label>
+            <mat-label>Transportes disponibles</mat-label>
             <mat-select formControlName="idtransporte">
+              <mat-option [value]="null">-- Seleccione un Transporte --</mat-option>
               <mat-option *ngFor="let t of transportes" [value]="t.idtransporte">
                 {{ t.placa }} - {{ t.marca }} {{ t.linea }}
               </mat-option>
             </mat-select>
             <mat-icon matSuffix>local_shipping</mat-icon>
-
-            <mat-hint *ngIf="transportes.length === 0">No hay unidades disponibles.</mat-hint>
             <mat-error *ngIf="parcialidadForm.get('idtransporte')?.hasError('required')">
-              Debes seleccionar una unidad de transporte.
+              Debe seleccionar un transporte.
             </mat-error>
           </mat-form-field>
 
+          <!-- CAMBIO: Título "Transportistas disponibles" y mensaje de selección -->
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Transportista</mat-label>
+            <mat-label>Transportistas disponibles</mat-label>
             <mat-select formControlName="idtransportista">
-              <!-- Iteramos sobre la lista que viene del backend -->
+              <mat-option [value]="null">-- Seleccione un Transportista --</mat-option>
               <mat-option *ngFor="let t of transportistas" [value]="t.idtransportista">
                 {{ t.nombreCompleto }}
               </mat-option>
             </mat-select>
             <mat-icon matSuffix>badge</mat-icon>
-
-            <!-- Mensajes de ayuda y error -->
-            <mat-hint *ngIf="transportistas.length === 0">No hay transportistas disponibles con estado activo.</mat-hint>
             <mat-error *ngIf="parcialidadForm.get('idtransportista')?.hasError('required')">
-              Debes seleccionar un transportista para continuar.
+              Debe seleccionar un transportista.
             </mat-error>
           </mat-form-field>
 
+          <!-- CAMBIO: Título "Tipo de Medida" -->
           <mat-form-field appearance="outline">
-            <mat-label>Unidad de Medida</mat-label>
+            <mat-label>Tipo de Medida</mat-label>
             <mat-select formControlName="tipomedida">
+              <mat-option [value]="null">-- Seleccione Medida --</mat-option>
               <mat-option *ngFor="let unidad of unidadesMedida" [value]="unidad.nombre">
-                {{ unidad.nombre }} {{ unidad.abreviatura ? '(' + unidad.abreviatura + ')' : '' }}
+                {{ unidad.nombre }}
               </mat-option>
             </mat-select>
             <mat-icon matSuffix>straighten</mat-icon>
-            <mat-hint *ngIf="unidadesMedida.length === 0">Cargando unidades...</mat-hint>
           </mat-form-field>
-
         </div>
 
         <div class="form-actions">
-          <button mat-fab extended class="create-btn" color="primary" (click)="crearParcialidad()">
+          <button type="button" mat-button class="cancel-btn" (click)="regresar()">
+            Cancelar
+          </button>
+
+          <!-- IMPORTANTE: El botón se habilitará cuando form.valid sea true -->
+          <button
+            mat-fab
+            extended
+            class="create-btn"
+            [disabled]="parcialidadForm.invalid"
+            (click)="crearParcialidad()">
             <mat-icon>check_circle</mat-icon>
-            CREAR PARCIALIDAD
+            Crear
           </button>
         </div>
       </form>

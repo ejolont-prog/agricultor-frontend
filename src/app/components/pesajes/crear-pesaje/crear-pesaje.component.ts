@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CatalogoService } from '../../../services/catalogo.service';
 import { PesajeService } from '../../../services/pesaje.service'; // Asegúrate de que la ruta sea correcta
+import { MatIcon } from "@angular/material/icon";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crear-pesaje',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIcon],
   templateUrl: './crear-pesaje.component.html',
   styleUrls: ['./crear-pesaje.component.css']
 })
@@ -20,7 +22,7 @@ export class CrearPesajeComponent implements OnInit {
   // 2. Variables para el formulario (ngModel)
   unidadSeleccionada: any = null;
   estadoSeleccionado: any = null;
-  pesoIngresado: number = 0; // Para el input de "Peso Total Actual"
+  pesoIngresado: number | null = null; // Para el input de "Peso Total Actual"
   fechaActual: string = '';
 
   constructor(
@@ -64,38 +66,70 @@ export class CrearPesajeComponent implements OnInit {
   }
 
   crearPesaje(): void {
-    // Validaciones mínimas antes de enviar
-    if (!this.unidadSeleccionada) {
-      alert('Debe seleccionar una unidad de medida');
-      return;
-    }
-    if (this.pesoIngresado <= 0) {
-      alert('El peso debe ser mayor a 0');
-      return;
-    }
-
-    // 3. Mapeo del objeto según tu Entidad Java (Pesaje.java)
-    const dataParaGuardar = {
-      pesototalestimado: this.pesoIngresado,
-      idunidadmedida: this.unidadSeleccionada,
-      estado: this.estadoSeleccionado
-      // Nota: creadopor, fechacreacion, idperfilagricultor, etc.,
-      // los maneja el backend automáticamente con el token.
-    };
-
-    console.log('Enviando objeto al backend:', dataParaGuardar);
-
-    // 4. Llamada al servicio para guardar
-    this.pesajeService.guardar(dataParaGuardar).subscribe({
-      next: (res) => {
-        console.log('Pesaje guardado correctamente:', res);
-        // Regresamos a la tabla de pesajes
-        this.router.navigate(['/pesajes']);
-      },
-      error: (err) => {
-        console.error('Error al guardar pesaje:', err);
-        alert('Hubo un error al procesar el registro. Intente de nuevo.');
+      // 1. VALIDACIÓN INICIAL
+      if (!this.unidadSeleccionada || this.pesoIngresado === null || this.pesoIngresado <= 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Atención',
+          text: 'Por favor, completa todos los campos con valores válidos antes de continuar.',
+          confirmButtonColor: '#2b170e' // Color café de tu paleta
+        });
+        return;
       }
-    });
-  }
+
+      // 2. PREPARACIÓN DE DATOS
+      const dataParaGuardar = {
+        pesototalestimado: this.pesoIngresado,
+        idunidadmedida: this.unidadSeleccionada,
+        estado: this.estadoSeleccionado
+      };
+
+      // 3. MOSTRAR LOADING (Igual que en transportes)
+      Swal.fire({
+        title: 'Procesando registro',
+        text: 'Solicitando creacion de cuenta',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // 4. LLAMADA AL SERVICIO
+      this.pesajeService.guardar(dataParaGuardar).subscribe({
+        next: (res) => {
+          Swal.close(); // Cerramos el loading
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Se creó con éxito',
+            text: 'El pesaje se ha creado con éxito',
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#c6a47e' // Tu color accent-gold
+          }).then(() => {
+            // Redirección al listado después de que el usuario dé clic en OK
+            this.router.navigate(['/dashboard']);
+          });
+        },
+        error: (err) => {
+          Swal.close(); // Cerramos el loading
+          console.error('Error al guardar pesaje:', err);
+
+          // Intentar extraer mensaje de error del backend
+          let mensajeError = 'No se pudo completar el registro del pesaje.';
+          if (err.error && typeof err.error === 'string') {
+            mensajeError = err.error;
+          } else if (err.error && err.error.message) {
+            mensajeError = err.error.message;
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Error en el sistema',
+            text: mensajeError,
+            confirmButtonColor: '#2b170e',
+            confirmButtonText: 'Reintentar'
+          });
+        }
+      });
+    }
 }

@@ -16,6 +16,7 @@ import { CatalogoService } from '../../../services/catalogo.service';
 // Asegúrate de que la ruta hacia tu servicio sea la correcta
 import { TransportistaService } from '../../../services/transportista.service';
 import {TransporteService} from "../../../services/transporte.service";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nuevaparcialidad',
@@ -48,15 +49,27 @@ export class NuevaparcialidadComponent implements OnInit {
     private transportistaService: TransportistaService,
     private transporteService: TransporteService
   ) {
+    // DENTRO DEL CONSTRUCTOR O DONDE DEFINES EL FORMULARIO:
     this.parcialidadForm = this.fb.group({
       idpesaje: ['', Validators.required],
-      idtransporte: ['', Validators.required],
-      idtransportista: ['', Validators.required],
-      tipomedida: ['', Validators.required],
-      pesoestimadoparcialidad: [0, [Validators.required, Validators.min(0.1)]],
+      // Usamos null en lugar de '' para que el mat-option de selección funcione mejor
+      idtransporte: [null, Validators.required],
+      idtransportista: [null, Validators.required],
+      tipomedida: [null, Validators.required],
+      // Peso: Mínimo 1. Si está en null o 0, el formulario será INVÁLIDO.
+      pesoestimadoparcialidad: [null, [Validators.required, Validators.min(1)]],
       estadoparcialidad: [1]
     });
   }
+
+  soloNumeros(event: any): boolean {
+      const charCode = (event.which) ? event.which : event.keyCode;
+      // Permitir números (48-57) y el punto decimal (46)
+      if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+        return false;
+      }
+      return true;
+    }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -106,31 +119,55 @@ export class NuevaparcialidadComponent implements OnInit {
   }
 
   crearParcialidad() {
-    console.log('--- Datos enviados ---');
-    console.log(this.parcialidadForm.value);
+      if (this.parcialidadForm.invalid) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Formulario Incompleto',
+          text: 'Por favor, llena todos los campos correctamente.',
+          confirmButtonColor: '#2b170e'
+        });
+        return;
+      }
 
-    if (this.parcialidadForm.valid) {
+      // --- LOADING ---
+      Swal.fire({
+        title: 'Registrando Parcialidad',
+        text: 'Validando datos enviados',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
       this.parcialidadService.crear(this.parcialidadForm.value).subscribe({
         next: () => {
-          alert('¡Parcialidad guardada con éxito!');
-          this.router.navigate(['/pesajes']);
+          Swal.close();
+          Swal.fire({
+            icon: 'success',
+            title: 'Se creó con éxito',
+            text: 'La parcialidad se ha creado con éxito',
+            confirmButtonText: 'Ok',
+            confirmButtonColor: '#c6a47e'
+          }).then(() => {
+            // Regresamos al detalle del pesaje padre
+            this.router.navigate(['/pesajes'], {
+              queryParams: { idPesaje: this.idPesajeSeleccionado }
+            });
+          });
         },
         error: (err) => {
+          Swal.close();
           console.error('Error del servidor:', err);
-          alert('Error al guardar: ' + err.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al guardar',
+            text: err.error?.message || 'Hubo un problema con la conexión al servidor.',
+            confirmButtonColor: '#2b170e'
+          });
         }
       });
-    } else {
-      console.warn('--- El formulario es INVÁLIDO ---');
-      Object.keys(this.parcialidadForm.controls).forEach(key => {
-        const controlErrors = this.parcialidadForm.get(key)?.errors;
-        if (controlErrors != null) {
-          console.log(`Campo "${key}" con errores:`, controlErrors);
-        }
-      });
-      alert('Por favor, completa todos los campos requeridos.');
     }
-  }
+
   regresar() {
     this.router.navigate(['/pesajes']);
   }
