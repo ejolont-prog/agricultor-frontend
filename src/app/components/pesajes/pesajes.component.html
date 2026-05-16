@@ -25,7 +25,7 @@
           <th>Peso Total</th>
           <th>Cant. Parcialidades</th>
           <th>Fecha Envío</th>
-          <th>Estado</th>
+          <th class="text-center">Estado</th>
           <th>Acciones</th>
         </tr>
         </thead>
@@ -33,9 +33,9 @@
         <tr *ngFor="let p of listado">
           <td class="fw-bold">{{ p.idpesaje }}</td>
           <td class="fw-bold">
-  <span *ngIf="p.nocuenta; else sinCuenta">
-    {{ p.nocuenta }}
-  </span>
+            <span *ngIf="p.nocuenta; else sinCuenta">
+              {{ p.nocuenta }}
+            </span>
             <ng-template #sinCuenta>
               <span class="text-muted fst-italic">Pendiente de confirmar</span>
             </ng-template>
@@ -43,7 +43,21 @@
           <td>{{ p.pesototalestimado }}</td>
           <td>{{ p.cantidadparcialidades }}</td>
           <td>{{ p.fechacreacion | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>{{ p.nombreEstado }}</td>
+
+          <td class="text-center">
+            <span class="badge-estado" [ngClass]="{
+              'estado-sin-cuenta': p.nombreEstado?.toLowerCase()?.includes('sin cuenta'),
+              'estado-creada':     p.nombreEstado?.toLowerCase()?.includes('cuenta creada'),
+              'estado-abierta':    p.nombreEstado?.toLowerCase()?.includes('cuenta abierta'),
+              'estado-iniciado':   p.nombreEstado?.toLowerCase()?.includes('iniciado'),
+              'estado-finalizado': p.nombreEstado?.toLowerCase()?.includes('finalizado'),
+              'estado-cerrada':    p.nombreEstado?.toLowerCase()?.includes('cerrada'),
+              'estado-confirmada': p.nombreEstado?.toLowerCase()?.includes('confirmada')
+            }">
+              {{ p.nombreEstado || 'Sin Estado' }}
+            </span>
+          </td>
+
           <td>
             <button
               class="btn detail-btn"

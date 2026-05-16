@@ -49,31 +49,42 @@ export class PesajesComponent implements OnInit, OnDestroy {
   }
 
   conectarWebSocket(): void {
-    // La URL debe ser la misma que configuraste en el registerStompEndpoints del Backend
     const socket = new SockJS('http://localhost:8081/ws-agricultor');
     this.stompClient = Stomp.over(socket);
 
-    // Opcional: Quitar los mensajes de debug en consola
     this.stompClient.debug = () => {};
 
     this.stompClient.connect({}, (frame: any) => {
       console.log('✅ Conectado al canal de actualizaciones de Agricultor');
 
-      // Nos suscribimos al tópico que definimos en el Service de Java
       this.stompClient.subscribe('/topic/actualizacion-pesaje', (notificacion: any) => {
         const respuesta = JSON.parse(notificacion.body);
-        const item = this.listado.find(p => p.idpesaje === respuesta.id);
+        console.log('Datos en tiempo real recibidos por Socket:', respuesta);
+
+        // CORRECCIÓN MULTI-CRITERIO: Busca de forma segura si viene como idpesaje, id, o usando el nocuenta
+        const item = this.listado.find(p =>
+          (respuesta.idpesaje && p.idpesaje === respuesta.idpesaje) ||
+          (respuesta.id && p.idpesaje === respuesta.id) ||
+          (respuesta.nocuenta && p.nocuenta === respuesta.nocuenta)
+        );
 
         if (item) {
-          item.nocuenta = respuesta.nocuenta;
-          item.estado = respuesta.estado; // Aquí llega el 163
-          item.nombreEstado = respuesta.nombreEstado; // Aquí llega "CUENTA ASIGNADA"
-          console.log('Fila actualizada visualmente');
+          // Actualizamos todas las propiedades de la fila dinámicamente
+          if (respuesta.nocuenta) item.nocuenta = respuesta.nocuenta;
+
+          // Mapeamos el estado numérico (atrapando el alias 'estado' o el alias devuelto)
+          item.estado = respuesta.estado !== undefined ? respuesta.estado : item.estado;
+
+          // Mapeamos el texto descriptivo del estado
+          item.nombreEstado = respuesta.nombreEstado || item.nombreEstado;
+
+          console.log('¡Fila encontrada y actualizada visualmente en tiempo real!');
+        } else {
+          console.warn('Se recibió la notificación por Socket, pero no se encontró la fila en el listado actual.');
         }
       });
     }, (error: any) => {
       console.error('Error en WebSocket:', error);
-      // Intento de reconexión automática a los 5 segundos
       setTimeout(() => this.conectarWebSocket(), 5000);
     });
   }
