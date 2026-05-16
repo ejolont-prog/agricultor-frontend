@@ -102,3 +102,65 @@
   transform: none !important;
   box-shadow: none !important;
 }
+
+/* --- UTILITARIOS DE ALINEACIÓN --- */
+.text-center {
+  text-align: center !important;
+}
+
+/* --- ESTILOS ASIGNADOS PARA LOS BADGES DINÁMICOS --- */
+.badge-estado {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  min-width: 140px;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+/* 1. Sin cuenta creada (Gris Neutro elegante) */
+.estado-sin-cuenta {
+  background-color: #eeeeee !important;
+  color: #616161 !important;
+}
+
+/* 2. Cuenta creada (Azul Info suave) */
+.estado-creada {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+}
+
+/* 3. Cuenta abierta (Melón corporativo de tu paleta) */
+.estado-abierta {
+  background-color: var(--melon-bg) !important;
+  color: var(--coffee-dark) !important;
+}
+
+/* 4. Pesaje iniciado (Naranja de precaución) */
+.estado-iniciado {
+  background-color: #fff3e0 !important;
+  color: #ef6c00 !important;
+}
+
+/* 5. Pesaje finalizado (Verde de éxito en báscula) */
+.estado-finalizado {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+/* 6. Cuenta cerrada (Rosa / Magenta de proceso concluido) */
+.estado-cerrada {
+  background-color: #fce4ec !important;
+  color: #c2185b !important;
+}
+
+/* 7. Cuenta confirmada (Dorado brillante / Liquidado) */
+.estado-confirmada {
+  background-color: #fff9c4 !important;
+  color: #fbc02d !important;
+  border: 1px solid #fbc02d !important;
+}
