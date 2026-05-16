@@ -1,0 +1,95 @@
+<div class="page-container">
+  <!-- Encabezado con Botón de Regreso -->
+  <div class="section-header">
+    <button mat-button class="back-btn" type="button" (click)="regresar()">
+      <mat-icon>arrow_back</mat-icon> REGRESAR
+    </button>
+    <div class="title-group">
+      <h1>Nuevo Usuario Agricultor</h1>
+      <p>Complete la información del perfil para sincronizar con Beneficio</p>
+    </div>
+  </div>
+
+  <!-- Tarjeta del Formulario -->
+  <mat-card class="form-card">
+    <form [formGroup]="agricultorForm" (ngSubmit)="guardar()">
+      <div class="form-grid">
+
+        <!-- Nombre de Usuario -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre de Usuario</mat-label>
+          <input matInput formControlName="usuario" placeholder="Ej: Juan Perez" (keypress)="filtrarEntrada($event, false)">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="agricultorForm.get('usuario')?.hasError('required')">
+            El nombre de usuario es obligatorio
+          </mat-error>
+          <mat-error *ngIf="agricultorForm.get('usuario')?.hasError('pattern')">
+            Solo se permiten letras y espacios
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Correo Electrónico -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput formControlName="correo" type="email" placeholder="correo@ejemplo.com">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="agricultorForm.get('correo')?.hasError('required')">
+            El correo es obligatorio
+          </mat-error>
+          <mat-error *ngIf="agricultorForm.get('correo')?.hasError('email')">
+            Ingrese un formato de correo válido
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Contraseña -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" formControlName="contrasena">
+          <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="agricultorForm.get('contrasena')?.hasError('required')">
+            La contraseña es obligatoria
+          </mat-error>
+        </mat-form-field>
+
+        <!-- NIT -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>NIT</mat-label>
+          <input matInput formControlName="nit" placeholder="Ej: 12345678" (keypress)="filtrarEntrada($event, true)">
+          <mat-icon matSuffix>fingerprint</mat-icon>
+          <mat-error *ngIf="agricultorForm.get('nit')?.hasError('required')">
+            El NIT es obligatorio
+          </mat-error>
+          <mat-error *ngIf="agricultorForm.get('nit')?.hasError('pattern')">
+            Solo se permiten números enteros
+          </mat-error>
+        </mat-form-field>
+
+        <!-- SELECT DE ROLES -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Rol de Usuario</mat-label>
+          <mat-select formControlName="idrol">
+            <mat-option *ngFor="let rol of roles" [value]="rol.id">
+              {{ rol.nombre }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="agricultorForm.get('idrol')?.hasError('required')">
+            Debe seleccionar un rol para el usuario
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <!-- Acciones del Formulario -->
+      <div class="form-actions">
+        <button mat-button type="button" class="cancel-btn" (click)="cancelar()">
+          Cancelar
+        </button>
+        <button mat-raised-button type="submit" class="create-btn" [disabled]="agricultorForm.invalid">
+          <mat-icon>save</mat-icon> Crear e Informar
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

@@ -9,6 +9,7 @@ import { CrearTransportistaComponent } from './components/transportista/creartra
 import { CrearTransporteComponent } from './components/transporte/crear-transporte/crear-transporte.component';
 import { authGuard } from './auth/auth.guard';
 import { CrearPesajeComponent } from "./components/pesajes/crear-pesaje/crear-pesaje.component";
+import { CrearAgricultorComponent } from "./components/crear-agricultor/crear-agricultor.component";
 
 export const routes: Routes = [
   {
@@ -16,6 +17,11 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard]
   },
+  {
+      path: 'crear-agricultor',
+      component: CrearAgricultorComponent,
+      canActivate: [authGuard]
+    },
   {
     path: 'parcialidades',
     component: ParcialidadesComponent,
